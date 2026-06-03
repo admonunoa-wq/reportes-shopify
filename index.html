@@ -29,16 +29,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .banner-sub-s{font-size:11px;color:#94a3b8}
 
 .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
-.kpi{background:white;border:0.5px solid #e2e8f0;border-radius:8px;padding:12px 10px}
-.kpi-lbl{font-size:9.5px;font-weight:700;letter-spacing:.04em;border-top:3px solid;padding-top:8px;margin-bottom:5px}
+.kpi{background:white;border:0.5px solid #e2e8f0;border-radius:8px;padding:12px 10px;min-width:0}
+.kpi-lbl{font-size:9.5px;font-weight:700;letter-spacing:.04em;border-top:3px solid;padding-top:8px;margin-bottom:5px;line-height:1.3}
 .kpi-val{font-size:22px;font-weight:800;line-height:1.1}
 .kpi-sub{font-size:9.5px;color:#94a3b8;margin-top:4px;line-height:1.3}
 
 .section-title{font-size:13px;font-weight:700;color:#1e293b;margin:14px 0 7px}
+.table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .data-table{width:100%;border-collapse:collapse;font-size:11px}
-.data-table th{background:#1e293b;color:white;padding:7px 8px;text-align:right;font-weight:500;font-size:10.5px}
+.data-table th{background:#1e293b;color:white;padding:7px 8px;text-align:right;font-weight:500;font-size:10.5px;white-space:nowrap}
 .data-table th:first-child{text-align:left}
-.data-table td{padding:6px 8px;border-bottom:0.5px solid #e2e8f0;text-align:right}
+.data-table td{padding:6px 8px;border-bottom:0.5px solid #e2e8f0;text-align:right;white-space:nowrap}
 .data-table td:first-child{text-align:left}
 .alt-row{background:#f8fafc}
 .delta-label{background:#1e293b;color:white;font-weight:700;padding:7px 8px;text-align:left!important}
@@ -47,6 +48,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 .chart-title{font-size:12px;font-weight:700;color:#1e293b;margin-bottom:10px}
 .footer{font-size:9px;color:#94a3b8;text-align:center;margin-top:16px;padding-top:12px;border-top:0.5px solid #e2e8f0}
 .comp-grid{display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:start}
+@media(max-width:640px){
+  .top-bar h1{font-size:13px}
+  .top-bar span{font-size:10px}
+  .container{padding:12px 10px}
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .kpis .kpi:nth-child(4),.kpis .kpi:nth-child(5){grid-column:span 1}
+  .kpi-val{font-size:18px}
+  .kpi-lbl{font-size:8.5px}
+  .kpi-sub{font-size:8.5px}
+  .two-col{grid-template-columns:1fr}
+  .comp-grid{grid-template-columns:1fr}
+  .comp-grid .chart-box{order:2}
+  .comp-grid table{order:1}
+  .banner-title{font-size:15px}
+  .data-table{font-size:10px}
+  .data-table th,.data-table td{padding:5px 6px}
+}
 </style>
 </head>
 <body>
@@ -93,7 +111,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Junio 2025 vs —</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -123,7 +141,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Junio 2025</div>
   <div class="two-col">
@@ -167,7 +185,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Julio 2025 vs Junio 2025</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -197,7 +215,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+7.7%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Julio 2025</div>
   <div class="two-col">
@@ -241,7 +259,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Agosto 2025 vs Julio 2025</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -271,7 +289,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+1.3%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Agosto 2025</div>
   <div class="two-col">
@@ -315,7 +333,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Septiembre 2025 vs Agosto 2025</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -345,7 +363,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.2%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Septiembre 2025</div>
   <div class="two-col">
@@ -389,7 +407,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Octubre 2025 vs Septiembre 2025</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -419,7 +437,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-11.5%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Octubre 2025</div>
   <div class="two-col">
@@ -463,7 +481,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Noviembre 2025 vs Octubre 2025</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -493,7 +511,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+118.2%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Noviembre 2025</div>
   <div class="two-col">
@@ -537,7 +555,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Diciembre 2025 vs Noviembre 2025</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -567,7 +585,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-6.4%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Diciembre 2025</div>
   <div class="two-col">
@@ -611,7 +629,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Enero 2026 vs Diciembre 2025</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -641,7 +659,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-46.2%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Enero 2026</div>
   <div class="two-col">
@@ -685,7 +703,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Febrero 2026 vs Enero 2026</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -715,7 +733,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-45.2%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Febrero 2026</div>
   <div class="two-col">
@@ -759,7 +777,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Marzo 2026 vs Febrero 2026</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -789,7 +807,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+178.4%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Marzo 2026</div>
   <div class="two-col">
@@ -833,7 +851,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Abril 2026 vs Marzo 2026</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -863,7 +881,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+15.9%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Abril 2026</div>
   <div class="two-col">
@@ -907,7 +925,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Variación Mayo 2026 vs Abril 2026</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
     <thead><tr>
       <th style="text-align:left;width:90px"></th>
       <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
@@ -937,7 +955,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
         <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+27.7%</td>
       </tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="section-title">Desglose de Ventas – Mayo 2026</div>
   <div class="two-col">
@@ -980,7 +998,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
   </div>
 
   <div class="section-title">Comparativo Mensual – 12 meses</div>
-  <table class="data-table" style="margin-bottom:16px">
+  <div class="table-scroll" style="margin-bottom:16px">
+  <table class="data-table">
     <thead><tr>
       <th style="text-align:left">Mes</th><th>Pedidos</th><th>V.Brutas</th>
       <th style="color:#f59e0b">Desc.</th><th style="color:#f59e0b">Dev/Anul</th>
@@ -1121,12 +1140,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <td style="padding:6px 8px;text-align:right;color:#94a3b8;font-weight:700">—</td>
     </tr></tbody>
   </table>
+  </div>
 
   <div class="section-title">Tráfico y Conversión (Jun 2025–May 2026)</div>
   <div class="comp-grid">
-    <div class="chart-box" style="margin-bottom:0">
-      <div style="position:relative;width:100%;height:220px"><canvas id="c-sess"></canvas></div>
-    </div>
     <table class="data-table">
       <thead><tr>
         <th style="text-align:left">Mes</th><th>Sesiones</th>
@@ -1194,6 +1211,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <td style="padding:6px 8px;text-align:right;color:#94a3b8;font-weight:700">—</td>
     </tr></tbody>
     </table>
+    <div class="chart-box" style="margin-bottom:0">
+      <div style="position:relative;width:100%;height:220px"><canvas id="c-sess"></canvas></div>
+    </div>
   </div>
   <div class="footer">Reporte generado automáticamente · Uno A Droguerías · drogueriasunoa.com</div>
 </div>
