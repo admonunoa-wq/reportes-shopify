@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shopify Histórico Jun 2025–May 2026 · Uno A Droguerías</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b;font-size:13px}
+.top-bar{background:#0f172a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.top-bar h1{color:white;font-size:15px;font-weight:700}
+.top-bar span{color:#a5b4fc;font-size:11px}
+.nav-strip{background:#1e293b;padding:10px 24px;display:flex;gap:6px;flex-wrap:wrap;position:sticky;top:53px;z-index:99;overflow-x:auto}
+.nav-btn{background:transparent;border:0.5px solid #475569;color:#94a3b8;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap}
+.nav-btn:hover{background:#334155;color:white}
+.nav-btn.active{background:#6366f1;border-color:#6366f1;color:white;font-weight:600}
+.nav-section{background:#0f172a;border:none;color:#475569;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit}
+.nav-section.active,.nav-section:hover{background:#334155;color:#a5b4fc}
+.container{max-width:860px;margin:0 auto;padding:20px 16px}
+.page{display:none}
+.page.active{display:block}
+
+.banner{background:#0f172a;padding:20px 22px;border-radius:10px;margin-bottom:16px}
+.banner-indigo{background:#6366f1;padding:20px 22px;border-radius:10px;margin-bottom:16px}
+.banner-title{font-size:18px;font-weight:800;color:white;margin-bottom:3px}
+.banner-sub{font-size:11px;color:#a5b4fc}
+.banner-sub-i{font-size:11px;color:#c7d2fe}
+.banner-sub-s{font-size:11px;color:#94a3b8}
+
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.kpi{background:white;border:0.5px solid #e2e8f0;border-radius:8px;padding:12px 10px;min-width:0}
+.kpi-lbl{font-size:9.5px;font-weight:700;letter-spacing:.04em;border-top:3px solid;padding-top:8px;margin-bottom:5px;line-height:1.3}
+.kpi-val{font-size:22px;font-weight:800;line-height:1.1}
+.kpi-sub{font-size:9.5px;color:#94a3b8;margin-top:4px;line-height:1.3}
+
+.section-title{font-size:13px;font-weight:700;color:#1e293b;margin:14px 0 7px}
+.table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.data-table{width:100%;border-collapse:collapse;font-size:11px}
+.data-table th{background:#1e293b;color:white;padding:7px 8px;text-align:right;font-weight:500;font-size:10.5px;white-space:nowrap}
+.data-table th:first-child{text-align:left}
+.data-table td{padding:6px 8px;border-bottom:0.5px solid #e2e8f0;text-align:right;white-space:nowrap}
+.data-table td:first-child{text-align:left}
+.alt-row{background:#f8fafc}
+.delta-label{background:#1e293b;color:white;font-weight:700;padding:7px 8px;text-align:left!important}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+.chart-box{background:white;border:0.5px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px}
+.chart-title{font-size:12px;font-weight:700;color:#1e293b;margin-bottom:10px}
+.footer{font-size:9px;color:#94a3b8;text-align:center;margin-top:16px;padding-top:12px;border-top:0.5px solid #e2e8f0}
+.comp-grid{display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:start}
+@media(max-width:640px){
+  .top-bar h1{font-size:13px}
+  .top-bar span{font-size:10px}
+  .container{padding:12px 10px}
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .kpis .kpi:nth-child(4),.kpis .kpi:nth-child(5){grid-column:span 1}
+  .kpi-val{font-size:18px}
+  .kpi-lbl{font-size:8.5px}
+  .kpi-sub{font-size:8.5px}
+  .two-col{grid-template-columns:1fr}
+  .comp-grid{grid-template-columns:1fr}
+  .comp-grid .chart-box{order:2}
+  .comp-grid table{order:1}
+  .banner-title{font-size:15px}
+  .data-table{font-size:10px}
+  .data-table th,.data-table td{padding:5px 6px}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>Uno A Droguerías · Shopify</h1>
+  <span>Histórico Jun 2025 – May 2026</span>
+</div>
+
+<div class="nav-strip">
+  <button class="nav-btn" onclick="showPage(0)" id="btn-0">Jun 25</button>
+<button class="nav-btn" onclick="showPage(1)" id="btn-1">Jul 25</button>
+<button class="nav-btn" onclick="showPage(2)" id="btn-2">Ago 25</button>
+<button class="nav-btn" onclick="showPage(3)" id="btn-3">Sep 25</button>
+<button class="nav-btn" onclick="showPage(4)" id="btn-4">Oct 25</button>
+<button class="nav-btn" onclick="showPage(5)" id="btn-5">Nov 25</button>
+<button class="nav-btn" onclick="showPage(6)" id="btn-6">Dic 25</button>
+<button class="nav-btn" onclick="showPage(7)" id="btn-7">Ene 26</button>
+<button class="nav-btn" onclick="showPage(8)" id="btn-8">Feb 26</button>
+<button class="nav-btn" onclick="showPage(9)" id="btn-9">Mar 26</button>
+<button class="nav-btn" onclick="showPage(10)" id="btn-10">Abr 26</button>
+<button class="nav-btn" onclick="showPage(11)" id="btn-11">May 26</button>
+
+  <button class="nav-section" id="btn-comp" onclick="showPage('comp')">📊 Comparativo</button>
+  <button class="nav-section" id="btn-top20" onclick="showPage('top20')">🏆 Top 20</button>
+</div>
+
+<div class="container">
+
+<!-- ═══ PÁGINAS MENSUALES ═══ -->
+
+<div class="page" id="page-0">
+  <div class="banner">
+    <div class="banner-title">Cierre de Junio 2025 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$8.2M</div><div class="kpi-sub">$8,157,237 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">81</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">16.8k</div><div class="kpi-sub">visitantes: 14.5k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.46%</div><div class="kpi-sub">primer mes</div></div>
+  </div>
+
+  <div class="section-title">Variación Junio 2025 vs —</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Junio 2025</td>
+        <td>$8.2M</td><td>$7.0M</td><td>$6.4M</td>
+        <td>81</td><td>16.8k</td><td>0.46%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
+        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
+        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
+        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
+        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
+        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Junio 2025</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$6,994,971</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-164,853</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-386,642</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$6,443,476</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$489,500</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$1,224,261</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$8,157,237</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Junio 2025</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Junio 2025 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-1">
+  <div class="banner">
+    <div class="banner-title">Cierre de Julio 2025 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$6.7M</div><div class="kpi-sub">$6,670,137 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">82</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">15.0k</div><div class="kpi-sub">visitantes: 12.9k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.49%</div><div class="kpi-sub">+0.04pp vs Junio 2025</div></div>
+  </div>
+
+  <div class="section-title">Variación Julio 2025 vs Junio 2025</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Junio 2025</td>
+        <td>$8.2M</td>
+        <td>$7.0M</td>
+        <td>$6.4M</td>
+        <td>81</td>
+        <td>16.8k</td>
+        <td>0.46%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Julio 2025</td>
+        <td>$6.7M</td><td>$5.6M</td><td>$5.1M</td>
+        <td>82</td><td>15.0k</td><td>0.49%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-18.2%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-19.5%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-20.1%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+1.2%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-10.8%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+7.7%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Julio 2025</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$5,627,814</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-51,151</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-429,909</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$5,146,754</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$545,500</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$977,883</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$6,670,137</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Julio 2025</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Julio 2025 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-2">
+  <div class="banner">
+    <div class="banner-title">Cierre de Agosto 2025 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$7.2M</div><div class="kpi-sub">$7,208,296 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">76</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">15.0k</div><div class="kpi-sub">visitantes: 13.1k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.50%</div><div class="kpi-sub">+0.01pp vs Julio 2025</div></div>
+  </div>
+
+  <div class="section-title">Variación Agosto 2025 vs Julio 2025</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Julio 2025</td>
+        <td>$6.7M</td>
+        <td>$5.6M</td>
+        <td>$5.1M</td>
+        <td>82</td>
+        <td>15.0k</td>
+        <td>0.49%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Agosto 2025</td>
+        <td>$7.2M</td><td>$6.2M</td><td>$5.6M</td>
+        <td>76</td><td>15.0k</td><td>0.50%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+8.1%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+10.0%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+9.5%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-7.3%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+0.1%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+1.3%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Agosto 2025</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$6,189,528</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-131,550</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-422,771</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$5,635,207</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$502,400</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$1,070,689</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$7,208,296</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Agosto 2025</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Agosto 2025 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-3">
+  <div class="banner">
+    <div class="banner-title">Cierre de Septiembre 2025 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$7.6M</div><div class="kpi-sub">$7,588,278 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">80</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">17.6k</div><div class="kpi-sub">visitantes: 15.6k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.42%</div><div class="kpi-sub">-0.08pp vs Agosto 2025</div></div>
+  </div>
+
+  <div class="section-title">Variación Septiembre 2025 vs Agosto 2025</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Agosto 2025</td>
+        <td>$7.2M</td>
+        <td>$6.2M</td>
+        <td>$5.6M</td>
+        <td>76</td>
+        <td>15.0k</td>
+        <td>0.50%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Septiembre 2025</td>
+        <td>$7.6M</td><td>$6.9M</td><td>$6.0M</td>
+        <td>80</td><td>17.6k</td><td>0.42%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+5.3%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+12.1%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+6.2%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+5.3%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+17.8%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.2%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Septiembre 2025</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$6,941,520</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-128,009</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-831,597</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$5,981,914</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$469,800</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$1,136,564</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$7,588,278</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Septiembre 2025</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Septiembre 2025 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-4">
+  <div class="banner">
+    <div class="banner-title">Cierre de Octubre 2025 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$5.3M</div><div class="kpi-sub">$5,330,141 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">67</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">16.7k</div><div class="kpi-sub">visitantes: 14.6k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.37%</div><div class="kpi-sub">-0.05pp vs Septiembre 2025</div></div>
+  </div>
+
+  <div class="section-title">Variación Octubre 2025 vs Septiembre 2025</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Septiembre 2025</td>
+        <td>$7.6M</td>
+        <td>$6.9M</td>
+        <td>$6.0M</td>
+        <td>80</td>
+        <td>17.6k</td>
+        <td>0.42%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Octubre 2025</td>
+        <td>$5.3M</td><td>$4.4M</td><td>$4.0M</td>
+        <td>67</td><td>16.7k</td><td>0.37%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-29.8%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-36.7%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-32.4%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.2%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-5.3%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-11.5%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Octubre 2025</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$4,394,791</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-201,336</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-147,118</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$4,046,337</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$515,000</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$768,804</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$5,330,141</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Octubre 2025</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Octubre 2025 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-5">
+  <div class="banner">
+    <div class="banner-title">Cierre de Noviembre 2025 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$15.3M</div><div class="kpi-sub">$15,297,972 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">148</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">17.9k</div><div class="kpi-sub">visitantes: 15.3k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.81%</div><div class="kpi-sub">+0.44pp vs Octubre 2025</div></div>
+  </div>
+
+  <div class="section-title">Variación Noviembre 2025 vs Octubre 2025</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Octubre 2025</td>
+        <td>$5.3M</td>
+        <td>$4.4M</td>
+        <td>$4.0M</td>
+        <td>67</td>
+        <td>16.7k</td>
+        <td>0.37%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Noviembre 2025</td>
+        <td>$15.3M</td><td>$13.7M</td><td>$12.1M</td>
+        <td>148</td><td>17.9k</td><td>0.81%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+187.0%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+212.4%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+198.4%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+120.9%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+7.2%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+118.2%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Noviembre 2025</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$13,729,617</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-951,834</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-705,370</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$12,072,413</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$931,800</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$2,293,759</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$15,297,972</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Noviembre 2025</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Noviembre 2025 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-6">
+  <div class="banner">
+    <div class="banner-title">Cierre de Diciembre 2025 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$18.9M</div><div class="kpi-sub">$18,908,476 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">146</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">18.6k</div><div class="kpi-sub">visitantes: 16.1k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.76%</div><div class="kpi-sub">-0.05pp vs Noviembre 2025</div></div>
+  </div>
+
+  <div class="section-title">Variación Diciembre 2025 vs Noviembre 2025</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Noviembre 2025</td>
+        <td>$15.3M</td>
+        <td>$13.7M</td>
+        <td>$12.1M</td>
+        <td>148</td>
+        <td>17.9k</td>
+        <td>0.81%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Diciembre 2025</td>
+        <td>$18.9M</td><td>$16.9M</td><td>$15.0M</td>
+        <td>146</td><td>18.6k</td><td>0.76%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+23.6%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+23.2%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+24.2%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-1.4%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+3.9%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-6.4%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Diciembre 2025</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$16,913,334</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-1,201,358</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-719,559</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$14,992,417</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$1,067,500</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$2,848,559</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$18,908,476</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Diciembre 2025</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Diciembre 2025 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-7">
+  <div class="banner">
+    <div class="banner-title">Cierre de Enero 2026 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$10.2M</div><div class="kpi-sub">$10,162,178 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">109</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">25.8k</div><div class="kpi-sub">visitantes: 22.9k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.41%</div><div class="kpi-sub">-0.35pp vs Diciembre 2025</div></div>
+  </div>
+
+  <div class="section-title">Variación Enero 2026 vs Diciembre 2025</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Diciembre 2025</td>
+        <td>$18.9M</td>
+        <td>$16.9M</td>
+        <td>$15.0M</td>
+        <td>146</td>
+        <td>18.6k</td>
+        <td>0.76%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Enero 2026</td>
+        <td>$10.2M</td><td>$8.9M</td><td>$7.7M</td>
+        <td>109</td><td>25.8k</td><td>0.41%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-46.3%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-47.6%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-48.4%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-25.3%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+38.5%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-46.2%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Enero 2026</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$8,861,559</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-230,796</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-896,412</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$7,734,352</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$958,300</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$1,469,527</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$10,162,178</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Enero 2026</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Enero 2026 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-8">
+  <div class="banner">
+    <div class="banner-title">Cierre de Febrero 2026 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$8.5M</div><div class="kpi-sub">$8,530,438 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">86</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">34.9k</div><div class="kpi-sub">visitantes: 32.1k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.22%</div><div class="kpi-sub">-0.18pp vs Enero 2026</div></div>
+  </div>
+
+  <div class="section-title">Variación Febrero 2026 vs Enero 2026</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Enero 2026</td>
+        <td>$10.2M</td>
+        <td>$8.9M</td>
+        <td>$7.7M</td>
+        <td>109</td>
+        <td>25.8k</td>
+        <td>0.41%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Febrero 2026</td>
+        <td>$8.5M</td><td>$7.2M</td><td>$6.5M</td>
+        <td>86</td><td>34.9k</td><td>0.22%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.1%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-19.2%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.0%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-21.1%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+35.5%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-45.2%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Febrero 2026</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$7,157,012</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-278,253</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-379,819</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$6,498,939</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$796,700</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$1,234,798</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$8,530,438</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Febrero 2026</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Febrero 2026 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-9">
+  <div class="banner">
+    <div class="banner-title">Cierre de Marzo 2026 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$18.8M</div><div class="kpi-sub">$18,797,765 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">183</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">28.1k</div><div class="kpi-sub">visitantes: 25.1k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.62%</div><div class="kpi-sub">+0.40pp vs Febrero 2026</div></div>
+  </div>
+
+  <div class="section-title">Variación Marzo 2026 vs Febrero 2026</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Febrero 2026</td>
+        <td>$8.5M</td>
+        <td>$7.2M</td>
+        <td>$6.5M</td>
+        <td>86</td>
+        <td>34.9k</td>
+        <td>0.22%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Marzo 2026</td>
+        <td>$18.8M</td><td>$15.0M</td><td>$14.3M</td>
+        <td>183</td><td>28.1k</td><td>0.62%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+120.4%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+109.4%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+120.1%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+112.8%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-19.4%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+178.4%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Marzo 2026</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$14,983,903</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-120,294</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-557,336</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$14,306,273</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$1,773,300</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$2,718,192</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$18,797,765</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Marzo 2026</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Marzo 2026 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-10">
+  <div class="banner">
+    <div class="banner-title">Cierre de Abril 2026 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$16.2M</div><div class="kpi-sub">$16,202,410 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">169</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">22.9k</div><div class="kpi-sub">visitantes: 20.4k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.72%</div><div class="kpi-sub">+0.10pp vs Marzo 2026</div></div>
+  </div>
+
+  <div class="section-title">Variación Abril 2026 vs Marzo 2026</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Marzo 2026</td>
+        <td>$18.8M</td>
+        <td>$15.0M</td>
+        <td>$14.3M</td>
+        <td>183</td>
+        <td>28.1k</td>
+        <td>0.62%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Abril 2026</td>
+        <td>$16.2M</td><td>$14.1M</td><td>$12.4M</td>
+        <td>169</td><td>22.9k</td><td>0.72%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-13.8%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-5.8%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-13.3%</td>
+        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-7.7%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-18.6%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+15.9%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Abril 2026</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$14,119,874</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-422,579</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-1,300,059</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$12,397,235</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$1,449,700</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$2,355,475</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$16,202,410</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Abril 2026</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Abril 2026 · drogueriasunoa.com</div>
+</div>
+<div class="page" id="page-11">
+  <div class="banner">
+    <div class="banner-title">Cierre de Mayo 2026 – Uno A Droguerías</div>
+    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$20.7M</div><div class="kpi-sub">$20,660,268 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">190</div><div class="kpi-sub">mes completo</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">20</div><div class="kpi-sub">10.5% pedidos · $1,467,460 COP</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">19.9k</div><div class="kpi-sub">visitantes: 17.4k</div></div>
+    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.92%</div><div class="kpi-sub">+0.20pp vs Abril 2026</div></div>
+  </div>
+
+  <div class="section-title">Variación Mayo 2026 vs Abril 2026</div>
+  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
+    <thead><tr>
+      <th style="text-align:left;width:90px"></th>
+      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
+    </tr></thead>
+    <tbody>
+      <tr class="alt-row">
+        <td style="font-weight:600">Abril 2026</td>
+        <td>$16.2M</td>
+        <td>$14.1M</td>
+        <td>$12.4M</td>
+        <td>169</td>
+        <td>22.9k</td>
+        <td>0.72%</td>
+      </tr>
+      <tr style="font-weight:700">
+        <td>Mayo 2026</td>
+        <td>$20.7M</td><td>$18.1M</td><td>$16.1M</td>
+        <td>190</td><td>19.9k</td><td>0.92%</td>
+      </tr>
+      <tr>
+        <td class="delta-label">∆</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+27.5%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+28.0%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+29.7%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+12.4%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-13.2%</td>
+        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+27.7%</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Desglose de Ventas – Mayo 2026</div>
+  <div class="two-col">
+    <table class="data-table">
+      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$18,071,688</td></tr>
+        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-849,135</td></tr>
+        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-1,147,876</td></tr>
+        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$16,074,678</td></tr>
+        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$1,532,200</td></tr>
+        <tr><td>+ Impuestos</td><td style="text-align:right">$3,053,391</td></tr>
+        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$20,660,268</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Mayo 2026</th></tr></thead>
+      <tbody>
+        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">20</td></tr>
+        <tr><td>Valor cancelado</td><td style="text-align:right">$1,467,460 COP</td></tr>
+        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">100% por el cliente</td></tr>
+        <tr><td>% sobre total pedidos</td><td style="text-align:right">10.5%</td></tr>
+        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">8.1% de V.Brutas</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">Reporte Uno A Droguerías · Mayo 2026 · drogueriasunoa.com</div>
+</div>
+
+<!-- ═══ PÁGINA COMPARATIVO ═══ -->
+<div class="page" id="page-comp">
+  <div class="banner-indigo">
+    <div class="banner-title">Comparativo Jun 2025 – May 2026</div>
+    <div class="banner-sub-i">Evolución de ventas, pedidos, tráfico y conversión · 12 meses</div>
+  </div>
+
+  <div class="chart-box">
+    <div class="chart-title">Total Recibido por Mes (desglose apilado) y Pedidos</div>
+    <div style="position:relative;width:100%;height:200px"><canvas id="c-sales"></canvas></div>
+  </div>
+
+  <div class="section-title">Comparativo Mensual – 12 meses</div>
+  <div class="table-scroll" style="margin-bottom:16px">
+  <table class="data-table">
+    <thead><tr>
+      <th style="text-align:left">Mes</th><th>Pedidos</th><th>V.Brutas</th>
+      <th style="color:#f59e0b">Desc.</th><th style="color:#f59e0b">Dev/Anul</th>
+      <th>V.Netas</th><th>Envíos</th><th>Imptos</th>
+      <th style="color:#a5b4fc">Total Rec.</th><th>∆ Total</th>
+    </tr></thead>
+    <tbody><tr style="background:#e0e7ff;font-weight:700;font-size:11px">
+      <td style="padding:6px 8px;font-weight:700">May 26</td>
+      <td style="padding:6px 8px;text-align:right">190</td>
+      <td style="padding:6px 8px;text-align:right">$18.1M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$849K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$1148K</td>
+      <td style="padding:6px 8px;text-align:right">$16.1M</td>
+      <td style="padding:6px 8px;text-align:right">$1532K</td>
+      <td style="padding:6px 8px;text-align:right">$3053K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$20.7M</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+27.5%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Abr 26</td>
+      <td style="padding:6px 8px;text-align:right">169</td>
+      <td style="padding:6px 8px;text-align:right">$14.1M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$423K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$1300K</td>
+      <td style="padding:6px 8px;text-align:right">$12.4M</td>
+      <td style="padding:6px 8px;text-align:right">$1450K</td>
+      <td style="padding:6px 8px;text-align:right">$2355K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$16.2M</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-13.8%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Mar 26</td>
+      <td style="padding:6px 8px;text-align:right">183</td>
+      <td style="padding:6px 8px;text-align:right">$15.0M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$120K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$557K</td>
+      <td style="padding:6px 8px;text-align:right">$14.3M</td>
+      <td style="padding:6px 8px;text-align:right">$1773K</td>
+      <td style="padding:6px 8px;text-align:right">$2718K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$18.8M</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+120.4%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Feb 26</td>
+      <td style="padding:6px 8px;text-align:right">86</td>
+      <td style="padding:6px 8px;text-align:right">$7.2M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$278K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$380K</td>
+      <td style="padding:6px 8px;text-align:right">$6.5M</td>
+      <td style="padding:6px 8px;text-align:right">$797K</td>
+      <td style="padding:6px 8px;text-align:right">$1235K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$8.5M</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-16.1%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Ene 26</td>
+      <td style="padding:6px 8px;text-align:right">109</td>
+      <td style="padding:6px 8px;text-align:right">$8.9M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$231K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$896K</td>
+      <td style="padding:6px 8px;text-align:right">$7.7M</td>
+      <td style="padding:6px 8px;text-align:right">$958K</td>
+      <td style="padding:6px 8px;text-align:right">$1470K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$10.2M</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-46.3%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Dic 25</td>
+      <td style="padding:6px 8px;text-align:right">146</td>
+      <td style="padding:6px 8px;text-align:right">$16.9M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$1201K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$720K</td>
+      <td style="padding:6px 8px;text-align:right">$15.0M</td>
+      <td style="padding:6px 8px;text-align:right">$1068K</td>
+      <td style="padding:6px 8px;text-align:right">$2849K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$18.9M</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+23.6%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Nov 25</td>
+      <td style="padding:6px 8px;text-align:right">148</td>
+      <td style="padding:6px 8px;text-align:right">$13.7M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$952K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$705K</td>
+      <td style="padding:6px 8px;text-align:right">$12.1M</td>
+      <td style="padding:6px 8px;text-align:right">$932K</td>
+      <td style="padding:6px 8px;text-align:right">$2294K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$15.3M</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+187.0%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Oct 25</td>
+      <td style="padding:6px 8px;text-align:right">67</td>
+      <td style="padding:6px 8px;text-align:right">$4.4M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$201K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$147K</td>
+      <td style="padding:6px 8px;text-align:right">$4.0M</td>
+      <td style="padding:6px 8px;text-align:right">$515K</td>
+      <td style="padding:6px 8px;text-align:right">$769K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$5.3M</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-29.8%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Sep 25</td>
+      <td style="padding:6px 8px;text-align:right">80</td>
+      <td style="padding:6px 8px;text-align:right">$6.9M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$128K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$832K</td>
+      <td style="padding:6px 8px;text-align:right">$6.0M</td>
+      <td style="padding:6px 8px;text-align:right">$470K</td>
+      <td style="padding:6px 8px;text-align:right">$1137K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$7.6M</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+5.3%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Ago 25</td>
+      <td style="padding:6px 8px;text-align:right">76</td>
+      <td style="padding:6px 8px;text-align:right">$6.2M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$132K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$423K</td>
+      <td style="padding:6px 8px;text-align:right">$5.6M</td>
+      <td style="padding:6px 8px;text-align:right">$502K</td>
+      <td style="padding:6px 8px;text-align:right">$1071K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$7.2M</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+8.1%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Jul 25</td>
+      <td style="padding:6px 8px;text-align:right">82</td>
+      <td style="padding:6px 8px;text-align:right">$5.6M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$51K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$430K</td>
+      <td style="padding:6px 8px;text-align:right">$5.1M</td>
+      <td style="padding:6px 8px;text-align:right">$546K</td>
+      <td style="padding:6px 8px;text-align:right">$978K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$6.7M</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-18.2%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px;font-weight:500">Jun 25</td>
+      <td style="padding:6px 8px;text-align:right">81</td>
+      <td style="padding:6px 8px;text-align:right">$7.0M</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$165K</td>
+      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$387K</td>
+      <td style="padding:6px 8px;text-align:right">$6.4M</td>
+      <td style="padding:6px 8px;text-align:right">$490K</td>
+      <td style="padding:6px 8px;text-align:right">$1224K</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$8.2M</td>
+      <td style="padding:6px 8px;text-align:right;color:#94a3b8;font-weight:700">—</td>
+    </tr></tbody>
+  </table>
+  </div>
+
+  <div class="section-title">Tráfico y Conversión (Jun 2025–May 2026)</div>
+  <div class="comp-grid">
+    <table class="data-table">
+      <thead><tr>
+        <th style="text-align:left">Mes</th><th>Sesiones</th>
+        <th style="color:#a5b4fc">Conv.</th><th>∆ Conv.</th>
+      </tr></thead>
+      <tbody><tr style="background:#e0e7ff;font-weight:700;font-size:11px">
+      <td style="padding:6px 8px">May 26</td>
+      <td style="padding:6px 8px;text-align:right">19.9k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.92%</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+27.7%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px">Abr 26</td>
+      <td style="padding:6px 8px;text-align:right">22.9k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.72%</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+15.9%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px">Mar 26</td>
+      <td style="padding:6px 8px;text-align:right">28.1k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.62%</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+178.4%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px">Feb 26</td>
+      <td style="padding:6px 8px;text-align:right">34.9k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.22%</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-45.2%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px">Ene 26</td>
+      <td style="padding:6px 8px;text-align:right">25.8k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.41%</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-46.2%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px">Dic 25</td>
+      <td style="padding:6px 8px;text-align:right">18.6k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.76%</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-6.4%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px">Nov 25</td>
+      <td style="padding:6px 8px;text-align:right">17.9k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.81%</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+118.2%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px">Oct 25</td>
+      <td style="padding:6px 8px;text-align:right">16.7k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.37%</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-11.5%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px">Sep 25</td>
+      <td style="padding:6px 8px;text-align:right">17.6k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.42%</td>
+      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-16.2%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px">Ago 25</td>
+      <td style="padding:6px 8px;text-align:right">15.0k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.50%</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+1.3%</td>
+    </tr><tr style="font-size:11px">
+      <td style="padding:6px 8px">Jul 25</td>
+      <td style="padding:6px 8px;text-align:right">15.0k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.49%</td>
+      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+7.7%</td>
+    </tr><tr style="background:#f8fafc;font-size:11px">
+      <td style="padding:6px 8px">Jun 25</td>
+      <td style="padding:6px 8px;text-align:right">16.8k</td>
+      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.46%</td>
+      <td style="padding:6px 8px;text-align:right;color:#94a3b8;font-weight:700">—</td>
+    </tr></tbody>
+    </table>
+    <div class="chart-box" style="margin-bottom:0">
+      <div style="position:relative;width:100%;height:220px"><canvas id="c-sess"></canvas></div>
+    </div>
+  </div>
+  <div class="footer">Reporte generado automáticamente · Uno A Droguerías · drogueriasunoa.com</div>
+</div>
+
+<!-- ═══ PÁGINA TOP 20 ═══ -->
+<div class="page" id="page-top20">
+  <div class="banner">
+    <div class="banner-title">Top 20 Productos – Mayo 2026</div>
+    <div class="banner-sub-s" style="color:#94a3b8">Unidades vendidas (pedidos) con valor en COP como dato complementario</div>
+  </div>
+  <div class="chart-box">
+    <div style="position:relative;width:100%;height:480px"><canvas id="c-top20"></canvas></div>
+  </div>
+  <div class="footer">Reporte generado automáticamente · Shopify May 2026 · Uno A Droguerías</div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+const labels  = ["Jun 25", "Jul 25", "Ago 25", "Sep 25", "Oct 25", "Nov 25", "Dic 25", "Ene 26", "Feb 26", "Mar 26", "Abr 26", "May 26"];
+const nets    = [6443476, 5146754, 5635207, 5981914, 4046337, 12072413, 14992417, 7734352, 6498939, 14306273, 12397235, 16074678];
+const ships   = [489500, 545500, 502400, 469800, 515000, 931800, 1067500, 958300, 796700, 1773300, 1449700, 1532200];
+const taxesD  = [1224261, 977883, 1070689, 1136564, 768804, 2293759, 2848559, 1469527, 1234798, 2718192, 2355475, 3053391];
+const ords    = [81, 82, 76, 80, 67, 148, 146, 109, 86, 183, 169, 190];
+const sessD   = [16774, 14969, 14983, 17643, 16704, 17900, 18602, 25770, 34906, 28123, 22883, 19871];
+const convD   = [0.459, 0.4944, 0.5006, 0.4194, 0.3712, 0.8101, 0.758, 0.4075, 0.2235, 0.6223, 0.7211, 0.9209];
+const top20Names  = ["Isoface 20mg 40 C\u00e1ps.", "Eucerin Sun Face Color SPF50+ 50ml", "Afelius Oil Free 60g", "Rozelaic Gel 30g", "Zopiclona 7.5mg 50 Tab.", "Bedoyecta Tri 3 Ampollas", "Orlistat 120mg 60 C\u00e1p.", "Escitrolam 20mg 30 Tab.", "Saxenda 6mg 1 Pluma", "Gestavit DHA 30 C\u00e1p.", "Ensure Advance Vainilla 850g", "Eucerin Sun Face SPF50+ 50ml", "Ensure Advance Vainilla 850g+400g", "Pa\u00f1al Tena Comfort Talla L 21 Un.", "Panal Tena Comfort Talla M 21 Un.", "Amiodarona 200mg 10 Tab.", "Finasterida 1mg 28 Tab.", "Acnotin 20mg (isotretinoina) 30 C\u00e1p.", "Isotretinoina 20mg 30 C\u00e1p.", "Finhet 1mg \u2013 Finasteride 30 Tab."];
+const top20Units  = [1, 2, 2, 2, 5, 3, 3, 7, 1, 4, 3, 4, 2, 4, 3, 4, 8, 7, 11, 26];
+const top20M      = [0.16, 0.16, 0.17, 0.18, 0.19, 0.21, 0.22, 0.26, 0.27, 0.29, 0.41, 0.42, 0.46, 0.49, 0.54, 0.65, 0.98, 0.98, 1.59, 2.97];
+
+Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif";
+Chart.defaults.font.size = 10;
+const GRID = 'rgba(0,0,0,0.06)';
+const TEXT = '#475569';
+
+function fmt(v){return '$'+(v/1e6).toFixed(1)+'M';}
+
+// Plugin: etiquetas encima de cada punto/barra
+const datalabelsPlugin = {
+  id:'customLabels',
+  afterDatasetsDraw(chart){
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach((ds,di)=>{
+      const meta = chart.getDatasetMeta(di);
+      if(meta.hidden) return;
+      meta.data.forEach((el,i)=>{
+        const v = ds.data[i];
+        if(v==null) return;
+        let label='', color='', fs=9, fw='600';
+        if(ds.type==='line'||ds.showLabels){
+          // líneas: mostrar valor encima del punto
+          if(ds.yAxisID==='y2'||ds.isOrders) label=String(v);
+          else if(ds.yAxisID==='yc') label=v.toFixed(2)+'%';
+          else label=String(v);
+          color=ds.borderColor||ds.backgroundColor||'#475569';
+          const x=el.x, y=el.y-8;
+          ctx.save();
+          ctx.font=`${fw} ${fs}px -apple-system,sans-serif`;
+          ctx.fillStyle=color;
+          ctx.textAlign='center';
+          ctx.fillText(label,x,y);
+          ctx.restore();
+        } else if(ds.type==='bar'&&!ds.stack){
+          // barras simples: encima
+          label = ds.fmtFn ? ds.fmtFn(v) : String(v);
+          color = '#475569';
+          const x=el.x, y=el.y-5;
+          ctx.save();
+          ctx.font=`${fw} ${fs}px -apple-system,sans-serif`;
+          ctx.fillStyle=color;
+          ctx.textAlign='center';
+          ctx.fillText(label,x,y);
+          ctx.restore();
+        }
+      });
+    });
+    // Para barras apiladas: etiqueta del total encima de la última pila
+    const stackedDatasets = chart.data.datasets.filter(d=>d.stack);
+    if(stackedDatasets.length>0){
+      const n = chart.data.labels.length;
+      for(let i=0;i<n;i++){
+        let total=0;
+        stackedDatasets.forEach(d=>{total+=d.data[i]||0;});
+        const lastDs = chart.getDatasetMeta(stackedDatasets.length-1);
+        if(!lastDs.hidden && lastDs.data[i]){
+          const el=lastDs.data[i];
+          const label='$'+(total/1e6).toFixed(1)+'M';
+          ctx.save();
+          ctx.font=`600 9px -apple-system,sans-serif`;
+          ctx.fillStyle='#1e293b';
+          ctx.textAlign='center';
+          ctx.fillText(label,el.x,el.y-6);
+          ctx.restore();
+        }
+      }
+    }
+  }
+};
+
+// Totales por mes para la línea
+const totals = nets.map((n,i)=>n+ships[i]+taxesD[i]);
+
+// Sales chart — barras apiladas (Netas+Envíos+Imptos) + línea pedidos con etiquetas
+new Chart(document.getElementById('c-sales'),{
+  data:{labels,datasets:[
+    {type:'bar',label:'Ventas Netas',data:nets,backgroundColor:'#6366f1',stack:'s'},
+    {type:'bar',label:'Envíos',data:ships,backgroundColor:'#0ea5e9',stack:'s'},
+    {type:'bar',label:'Impuestos',data:taxesD,backgroundColor:'#8b5cf6',stack:'s'},
+    {type:'line',label:'Pedidos (eje der.)',data:ords,borderColor:'#f59e0b',backgroundColor:'#f59e0b',
+      borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#f59e0b',tension:0.2,yAxisID:'y2',showLabels:true,isOrders:true}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{
+      x:{ticks:{color:TEXT,font:{size:9}},grid:{color:GRID}},
+      y:{stacked:true,ticks:{color:TEXT,callback:v=>'$'+(v/1e6).toFixed(0)+'M'},grid:{color:GRID}},
+      y2:{position:'right',ticks:{color:'#f59e0b',callback:v=>String(v)},grid:{display:false}}
+    },
+    plugins:{
+      legend:{position:'bottom',labels:{color:TEXT,boxWidth:12,padding:10}},
+      tooltip:{callbacks:{label:ctx=>{
+        if(ctx.dataset.yAxisID==='y2') return ' Pedidos: '+ctx.parsed.y;
+        return ' '+ctx.dataset.label+': $'+(ctx.parsed.y/1e6).toFixed(1)+'M';
+      }}}
+    }
+  },
+  plugins:[datalabelsPlugin]
+});
+
+// Sessions chart
+new Chart(document.getElementById('c-sess'),{
+  data:{labels,datasets:[
+    {type:'bar',label:'Sesiones',data:sessD,backgroundColor:'#0ea5e9',fmtFn:v=>(v/1000).toFixed(1)+'k'},
+    {type:'line',label:'Conv. %',data:convD,borderColor:'#8b5cf6',backgroundColor:'#8b5cf6',
+      borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#8b5cf6',yAxisID:'yc',tension:0.2,showLabels:true}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{
+      x:{ticks:{color:TEXT,font:{size:8}},grid:{color:GRID}},
+      y:{ticks:{color:TEXT,callback:v=>(v/1000).toFixed(0)+'k'},grid:{color:GRID}},
+      yc:{position:'right',ticks:{color:'#8b5cf6',callback:v=>v.toFixed(2)+'%'},grid:{display:false}}
+    },
+    plugins:{
+      legend:{position:'top',labels:{color:TEXT,boxWidth:10,padding:8}},
+      tooltip:{callbacks:{label:ctx=>{
+        if(ctx.dataset.yAxisID==='yc') return ' Conv: '+ctx.parsed.y.toFixed(2)+'%';
+        return ' Sesiones: '+(ctx.parsed.y/1000).toFixed(1)+'k';
+      }}}
+    }
+  },
+  plugins:[datalabelsPlugin]
+});
+
+// Top 20 chart
+new Chart(document.getElementById('c-top20'),{
+  type:'bar',
+  data:{labels:top20Names,datasets:[{
+    data:top20Units,backgroundColor:'#6366f1',borderRadius:3,
+    fmtFn:v=>v+' un.'
+  }]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    layout:{padding:{right:70}},
+    scales:{
+      x:{ticks:{color:TEXT},grid:{color:GRID},title:{display:true,text:'Unidades vendidas (pedidos)',color:TEXT}},
+      y:{ticks:{color:TEXT,font:{size:8.5}},grid:{display:false}}
+    },
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.x+' un. · $'+top20M[ctx.dataIndex]+'M'}}
+    }
+  },
+  plugins:[{
+    id:'top20Labels',
+    afterDatasetsDraw(chart){
+      const ctx=chart.ctx;
+      chart.data.datasets.forEach((ds,di)=>{
+        chart.getDatasetMeta(di).data.forEach((el,i)=>{
+          const v=ds.data[i];
+          ctx.save();
+          ctx.font='600 9px -apple-system,sans-serif';
+          ctx.fillStyle='#6366f1';
+          ctx.textAlign='left';
+          ctx.fillText(v+' un.',el.x+6,el.y+3.5);
+          ctx.fillStyle='#94a3b8';
+          ctx.fillText('$'+top20M[i]+'M',el.x+6+48,el.y+3.5);
+          ctx.restore();
+        });
+      });
+    }
+  }]
+});
+
+// Navigation
+let currentPage = 0;
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn,.nav-section').forEach(b=>b.classList.remove('active'));
+  if(id==='comp'){
+    document.getElementById('page-comp').classList.add('active');
+    document.getElementById('btn-comp').classList.add('active');
+  } else if(id==='top20'){
+    document.getElementById('page-top20').classList.add('active');
+    document.getElementById('btn-top20').classList.add('active');
+  } else {
+    document.getElementById('page-'+id).classList.add('active');
+    document.getElementById('btn-'+id).classList.add('active');
+    currentPage=id;
+  }
+  window.scrollTo(0,0);
+}
+showPage(11); // Mostrar Mayo 2026 por defecto
+</script>
+</body>
+</html>
