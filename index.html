@@ -3,1595 +3,189 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Shopify Histórico Jun 2025–May 2026 · Uno A Droguerías</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<title>Shopify Cierre Mayo 2026 – Uno A Droguerías</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b;font-size:13px}
-.top-bar{background:#0f172a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.top-bar h1{color:white;font-size:15px;font-weight:700}
-.top-bar span{color:#a5b4fc;font-size:11px}
-.nav-strip{background:#1e293b;padding:10px 24px;display:flex;gap:6px;flex-wrap:wrap;position:sticky;top:53px;z-index:99;overflow-x:auto}
-.nav-btn{background:transparent;border:0.5px solid #475569;color:#94a3b8;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap}
-.nav-btn:hover{background:#334155;color:white}
-.nav-btn.active{background:#6366f1;border-color:#6366f1;color:white;font-weight:600}
-.nav-section{background:#0f172a;border:none;color:#475569;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit}
-.nav-section.active,.nav-section:hover{background:#334155;color:#a5b4fc}
-.container{max-width:860px;margin:0 auto;padding:20px 16px}
-.page{display:none}
-.page.active{display:block}
-
-.banner{background:#0f172a;padding:20px 22px;border-radius:10px;margin-bottom:16px}
-.banner-indigo{background:#6366f1;padding:20px 22px;border-radius:10px;margin-bottom:16px}
-.banner-title{font-size:18px;font-weight:800;color:white;margin-bottom:3px}
-.banner-sub{font-size:11px;color:#a5b4fc}
-.banner-sub-i{font-size:11px;color:#c7d2fe}
-.banner-sub-s{font-size:11px;color:#94a3b8}
-
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
-.kpi{background:white;border:0.5px solid #e2e8f0;border-radius:8px;padding:12px 10px;min-width:0}
-.kpi-lbl{font-size:9.5px;font-weight:700;letter-spacing:.04em;border-top:3px solid;padding-top:8px;margin-bottom:5px;line-height:1.3}
-.kpi-val{font-size:22px;font-weight:800;line-height:1.1}
-.kpi-sub{font-size:9.5px;color:#94a3b8;margin-top:4px;line-height:1.3}
-
-.section-title{font-size:13px;font-weight:700;color:#1e293b;margin:14px 0 7px}
-.table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.data-table{width:100%;border-collapse:collapse;font-size:11px}
-.data-table th{background:#1e293b;color:white;padding:7px 8px;text-align:right;font-weight:500;font-size:10.5px;white-space:nowrap}
-.data-table th:first-child{text-align:left}
-.data-table td{padding:6px 8px;border-bottom:0.5px solid #e2e8f0;text-align:right;white-space:nowrap}
-.data-table td:first-child{text-align:left}
-.alt-row{background:#f8fafc}
-.delta-label{background:#1e293b;color:white;font-weight:700;padding:7px 8px;text-align:left!important}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
-.chart-box{background:white;border:0.5px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px}
-.chart-title{font-size:12px;font-weight:700;color:#1e293b;margin-bottom:10px}
-.footer{font-size:9px;color:#94a3b8;text-align:center;margin-top:16px;padding-top:12px;border-top:0.5px solid #e2e8f0}
-.comp-grid{display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:start}
-@media(max-width:640px){
-  .top-bar h1{font-size:13px}
-  .top-bar span{font-size:10px}
-  .container{padding:12px 10px}
-  .kpis{grid-template-columns:repeat(3,1fr)}
-  .kpis .kpi:nth-child(4),.kpis .kpi:nth-child(5){grid-column:span 1}
-  .kpi-val{font-size:18px}
-  .kpi-lbl{font-size:8.5px}
-  .kpi-sub{font-size:8.5px}
-  .two-col{grid-template-columns:1fr}
-  .comp-grid{grid-template-columns:1fr}
-  .comp-grid .chart-box{order:2}
-  .comp-grid table{order:1}
-  .banner-title{font-size:15px}
-  .data-table{font-size:10px}
-  .data-table th,.data-table td{padding:5px 6px}
-}
+  :root {
+    --bg: #0f172a; --card: #1e293b; --border: #334155;
+    --text: #f1f5f9; --muted: #94a3b8;
+    --purp: #6366f1; --green: #10b981; --red: #ef4444; --amber: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI',Arial,sans-serif; min-height:100vh; }
+  header { background: linear-gradient(135deg,#1e1b4b,#0f172a); padding:28px 24px 20px; border-bottom:1px solid var(--border); }
+  header h1 { font-size:1.7rem; color:#fff; }
+  header p  { color:var(--muted); margin-top:4px; font-size:.9rem; }
+  .container { max-width:1200px; margin:0 auto; padding:24px 16px; }
+  .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+  .kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; text-align:center; }
+  .kpi .val { font-size:1.5rem; font-weight:700; margin-bottom:4px; }
+  .kpi .lbl { font-size:.8rem; color:var(--muted); }
+  .kpi .delta { font-size:.8rem; margin-top:6px; }
+  .up { color:var(--green); } .dn { color:var(--red); }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:24px; }
+  .card h2 { font-size:1rem; font-weight:600; color:var(--purp); margin-bottom:16px; border-bottom:1px solid var(--border); padding-bottom:8px; }
+  canvas { max-height:320px; }
+  .tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+  .tab { padding:6px 14px; border-radius:6px; cursor:pointer; font-size:.82rem; border:1px solid var(--border); background:transparent; color:var(--muted); transition:.2s; }
+  .tab.active { background:var(--purp); color:#fff; border-color:var(--purp); }
+  table { width:100%; border-collapse:collapse; font-size:.82rem; }
+  th { background:#0f172a; color:var(--muted); padding:8px 10px; text-align:left; font-weight:500; border-bottom:1px solid var(--border); }
+  td { padding:7px 10px; border-bottom:1px solid var(--border); }
+  tr:hover td { background:#263148; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:.75rem; font-weight:600; }
+  .badge-purp { background:#312e81; color:#a5b4fc; }
+  footer { text-align:center; padding:20px; color:var(--muted); font-size:.78rem; border-top:1px solid var(--border); margin-top:8px; }
+  @media(max-width:640px) {
+    .kpi-grid { grid-template-columns:1fr 1fr; }
+    .kpi .val { font-size:1.2rem; }
+  }
 </style>
 </head>
 <body>
-
-<div class="top-bar">
-  <h1>Uno A Droguerías · Shopify</h1>
-  <span>Histórico Jun 2025 – May 2026</span>
-</div>
-
-<div class="nav-strip">
-  <button class="nav-btn" onclick="showPage(0)" id="btn-0">Jun 25</button>
-<button class="nav-btn" onclick="showPage(1)" id="btn-1">Jul 25</button>
-<button class="nav-btn" onclick="showPage(2)" id="btn-2">Ago 25</button>
-<button class="nav-btn" onclick="showPage(3)" id="btn-3">Sep 25</button>
-<button class="nav-btn" onclick="showPage(4)" id="btn-4">Oct 25</button>
-<button class="nav-btn" onclick="showPage(5)" id="btn-5">Nov 25</button>
-<button class="nav-btn" onclick="showPage(6)" id="btn-6">Dic 25</button>
-<button class="nav-btn" onclick="showPage(7)" id="btn-7">Ene 26</button>
-<button class="nav-btn" onclick="showPage(8)" id="btn-8">Feb 26</button>
-<button class="nav-btn" onclick="showPage(9)" id="btn-9">Mar 26</button>
-<button class="nav-btn" onclick="showPage(10)" id="btn-10">Abr 26</button>
-<button class="nav-btn" onclick="showPage(11)" id="btn-11">May 26</button>
-
-  <button class="nav-section" id="btn-comp" onclick="showPage('comp')">📊 Comparativo</button>
-  <button class="nav-section" id="btn-top20" onclick="showPage('top20')">🏆 Top 20</button>
-</div>
+<header>
+  <div style="max-width:1200px;margin:0 auto">
+    <h1>Shopify Cierre Mayo 2026</h1>
+    <p>Uno A Droguerías · drogueriasunoa.com · Reporte interactivo 12 meses</p>
+  </div>
+</header>
 
 <div class="container">
-
-<!-- ═══ PÁGINAS MENSUALES ═══ -->
-
-<div class="page" id="page-0">
-  <div class="banner">
-    <div class="banner-title">Cierre de Junio 2025 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$8.2M</div><div class="kpi-sub">$8,157,237 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">81</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">16.8k</div><div class="kpi-sub">visitantes: 14.5k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.46%</div><div class="kpi-sub">primer mes</div></div>
-  </div>
-
-  <div class="section-title">Variación Junio 2025 vs —</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">—</td>
-        <td>—</td>
-        <td>—</td>
-        <td>—</td>
-        <td>—</td>
-        <td>—</td>
-        <td>—</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Junio 2025</td>
-        <td>$8.2M</td><td>$7.0M</td><td>$6.4M</td>
-        <td>81</td><td>16.8k</td><td>0.46%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
-        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
-        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
-        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
-        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
-        <td style="background:#1e293b;color:#94a3b8;text-align:right;padding:7px 10px">—</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Junio 2025</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$6,994,971</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-164,853</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-386,642</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$6,443,476</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$489,500</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$1,224,261</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$8,157,237</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Junio 2025</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Junio 2025</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>10</td><td style="color:#6366f1;font-weight:600">$1.40M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Tretinex 20 mg 30 Cáp.</td><td>6</td><td style="color:#6366f1;font-weight:600">$0.90M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Similac 2 5hmos 1400 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.34M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Orlistat 120 mg 60 Cáp.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.29M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Dorzolamida+Timolol Gotas</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.27M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Ensure Advance Vainilla 850 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.25M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Aurasert 100 mg 28 Tab.</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.17M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Anemidox 30 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.16M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Isotretinoina 10 mg 30 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Tramadol 100 mg Gotas 10 ml</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.12M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Neo Fungina Polvo 200 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Metformina 850 mg 30 Tab.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">X Ray Dol 80 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Atorvastatina 40 mg 30 Tab.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Lidocaina+Hidrocortisona Ungüento</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Junio 2025 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-1">
-  <div class="banner">
-    <div class="banner-title">Cierre de Julio 2025 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$6.7M</div><div class="kpi-sub">$6,670,137 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">82</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">15.0k</div><div class="kpi-sub">visitantes: 12.9k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.49%</div><div class="kpi-sub">+0.04pp vs Junio 2025</div></div>
-  </div>
-
-  <div class="section-title">Variación Julio 2025 vs Junio 2025</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Junio 2025</td>
-        <td>$8.2M</td>
-        <td>$7.0M</td>
-        <td>$6.4M</td>
-        <td>81</td>
-        <td>16.8k</td>
-        <td>0.46%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Julio 2025</td>
-        <td>$6.7M</td><td>$5.6M</td><td>$5.1M</td>
-        <td>82</td><td>15.0k</td><td>0.49%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-18.2%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-19.5%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-20.1%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+1.2%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-10.8%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+7.7%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Julio 2025</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$5,627,814</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-51,151</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-429,909</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$5,146,754</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$545,500</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$977,883</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$6,670,137</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Julio 2025</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Julio 2025</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>17</td><td style="color:#6366f1;font-weight:600">$1.56M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Tretinex 20 mg 30 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.47M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Tramadol 100 mg Gotas 10 ml</td><td>5</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">K-micot 1% Spray 30 ml</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Betatreinta 5 mg Ampolla</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.13M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Vertigoheel 100 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.13M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Neubalin 150 mg 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.12M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Hies-toffer Plus 360 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Fexofenadina 180 mg Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Aurasert 100 mg 28 Tab.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Sertranquil 50 mg 10 Tab.</td><td>5</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Vita Zinc-f Silver Omega 400 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Symbicort Rapihaler 160 120D</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Crema Ponds Age Miracle 50 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.09M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Crema Lureac 15% 60 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.08M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Julio 2025 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-2">
-  <div class="banner">
-    <div class="banner-title">Cierre de Agosto 2025 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$7.2M</div><div class="kpi-sub">$7,208,296 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">76</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">15.0k</div><div class="kpi-sub">visitantes: 13.1k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.50%</div><div class="kpi-sub">+0.01pp vs Julio 2025</div></div>
-  </div>
-
-  <div class="section-title">Variación Agosto 2025 vs Julio 2025</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Julio 2025</td>
-        <td>$6.7M</td>
-        <td>$5.6M</td>
-        <td>$5.1M</td>
-        <td>82</td>
-        <td>15.0k</td>
-        <td>0.49%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Agosto 2025</td>
-        <td>$7.2M</td><td>$6.2M</td><td>$5.6M</td>
-        <td>76</td><td>15.0k</td><td>0.50%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+8.1%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+10.0%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+9.5%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-7.3%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+0.1%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+1.3%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Agosto 2025</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$6,189,528</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-131,550</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-422,771</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$5,635,207</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$502,400</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$1,070,689</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$7,208,296</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Agosto 2025</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Agosto 2025</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>17</td><td style="color:#6366f1;font-weight:600">$1.70M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Acnotin 20 mg 30 Cáp.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.69M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Eucerin PH5 Locion 400 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.32M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Dinive 20 mg 28 Tab.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.26M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Ensure Advance Vainilla 850 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Arawak Crema Antiedad 60 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.18M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Tramadol 100 mg Gotas 10 ml</td><td>7</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Isotretinoina 10 mg 30 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Isoface 10 mg 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.13M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Enteroplex Nutrabiotics 180 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Vaxdil 10 mg 30 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Neubalin 150 mg 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.09M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Minoxidil 5% Locion 60 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.09M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Anemidox 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.08M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Bellaface Suave 28 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.07M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Agosto 2025 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-3">
-  <div class="banner">
-    <div class="banner-title">Cierre de Septiembre 2025 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$7.6M</div><div class="kpi-sub">$7,588,278 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">80</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">17.6k</div><div class="kpi-sub">visitantes: 15.6k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.42%</div><div class="kpi-sub">-0.08pp vs Agosto 2025</div></div>
-  </div>
-
-  <div class="section-title">Variación Septiembre 2025 vs Agosto 2025</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Agosto 2025</td>
-        <td>$7.2M</td>
-        <td>$6.2M</td>
-        <td>$5.6M</td>
-        <td>76</td>
-        <td>15.0k</td>
-        <td>0.50%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Septiembre 2025</td>
-        <td>$7.6M</td><td>$6.9M</td><td>$6.0M</td>
-        <td>80</td><td>17.6k</td><td>0.42%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+5.3%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+12.1%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+6.2%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+5.3%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+17.8%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.2%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Septiembre 2025</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$6,941,520</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-128,009</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-831,597</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$5,981,914</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$469,800</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$1,136,564</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$7,588,278</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Septiembre 2025</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Septiembre 2025</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>19</td><td style="color:#6366f1;font-weight:600">$1.91M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Gestavit DHA 30 Cáp.</td><td>4</td><td style="color:#6366f1;font-weight:600">$1.02M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Isoface 20 mg 40 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.32M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Acnotin 10 mg 30 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.26M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Allegra 180 mg 10 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.17M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Tramadol 100 mg Gotas 10 ml</td><td>7</td><td style="color:#6366f1;font-weight:600">$0.17M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Jardiance Duo 12.5/1000 mg 60 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.16M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Traumeel Gotas 30ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.16M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Acnotin 20 mg 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.12M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Isdin Oil Control SPF50 50 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Ferroprotina 40 mg 30 Sob.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Galvus Met 50/1000 mg 56 Comp</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Limpiaderm Crema 20 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.09M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Dizmopraz 30 mg 28 Cáps.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.08M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Dolex Avanzado 100 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.08M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Septiembre 2025 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-4">
-  <div class="banner">
-    <div class="banner-title">Cierre de Octubre 2025 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$5.3M</div><div class="kpi-sub">$5,330,141 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">67</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">16.7k</div><div class="kpi-sub">visitantes: 14.6k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.37%</div><div class="kpi-sub">-0.05pp vs Septiembre 2025</div></div>
-  </div>
-
-  <div class="section-title">Variación Octubre 2025 vs Septiembre 2025</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Septiembre 2025</td>
-        <td>$7.6M</td>
-        <td>$6.9M</td>
-        <td>$6.0M</td>
-        <td>80</td>
-        <td>17.6k</td>
-        <td>0.42%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Octubre 2025</td>
-        <td>$5.3M</td><td>$4.4M</td><td>$4.0M</td>
-        <td>67</td><td>16.7k</td><td>0.37%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-29.8%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-36.7%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-32.4%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.2%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-5.3%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-11.5%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Octubre 2025</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$4,394,791</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-201,336</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-147,118</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$4,046,337</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$515,000</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$768,804</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$5,330,141</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Octubre 2025</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Octubre 2025</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>17</td><td style="color:#6366f1;font-weight:600">$1.16M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Ensure Advance Vainilla 850 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Aurasert 100 mg 28 Tab.</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.20M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Vitybell 30 Cáp. Blandas</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.19M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Kenacort I.A. 10 mg Ampolla</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.18M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Isoface 20 mg 40 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.16M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Versatis 5% Parches 5 Un.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Hyabak Hipotónico 10 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.13M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Cliogen T Crema 20 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.13M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Tramadol 100 mg Gotas 10 ml</td><td>5</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Femiane 21 Grageas</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.11M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Derprosol Clobetasol 0.05% 40 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Vaxdil 10 mg 30 Tab.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Symbicort Rapihaler 160 120D</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.10M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Biogaia + Vitamina D3 5 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.09M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Octubre 2025 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-5">
-  <div class="banner">
-    <div class="banner-title">Cierre de Noviembre 2025 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$15.3M</div><div class="kpi-sub">$15,297,972 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">148</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">17.9k</div><div class="kpi-sub">visitantes: 15.3k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.81%</div><div class="kpi-sub">+0.44pp vs Octubre 2025</div></div>
-  </div>
-
-  <div class="section-title">Variación Noviembre 2025 vs Octubre 2025</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Octubre 2025</td>
-        <td>$5.3M</td>
-        <td>$4.4M</td>
-        <td>$4.0M</td>
-        <td>67</td>
-        <td>16.7k</td>
-        <td>0.37%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Noviembre 2025</td>
-        <td>$15.3M</td><td>$13.7M</td><td>$12.1M</td>
-        <td>148</td><td>17.9k</td><td>0.81%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+187.0%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+212.4%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+198.4%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+120.9%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+7.2%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+118.2%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Noviembre 2025</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$13,729,617</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-951,834</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-705,370</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$12,072,413</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$931,800</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$2,293,759</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$15,297,972</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Noviembre 2025</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Noviembre 2025</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Eucerin Sun Oil Control SPF50 50 ml</td><td>42</td><td style="color:#6366f1;font-weight:600">$3.55M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>20</td><td style="color:#6366f1;font-weight:600">$2.27M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Isotretinoina 20 mg 30 Cáp.</td><td>8</td><td style="color:#6366f1;font-weight:600">$0.89M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Similac 1 5hmos 1400 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.56M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Finasterida 1 mg 28 Tab.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.43M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Vaxdil 10 mg 30 Tab.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.35M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Isdin Oil Control Fusion Water SPF50</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.32M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Isoface 20 mg 40 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.31M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Isdin Oil Control Medium Color SPF50</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.27M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Acnotin 20 mg 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.25M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Ensure Advance Vainilla 850 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Alpina Baby Nutrimax Etapa 3 800 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.20M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Tramadol 100 mg Gotas 10 ml</td><td>6</td><td style="color:#6366f1;font-weight:600">$0.18M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Loceryl 5% Laca 2.5 ml</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Exelges Multivitamínico 30 uds</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.14M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Noviembre 2025 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-6">
-  <div class="banner">
-    <div class="banner-title">Cierre de Diciembre 2025 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$18.9M</div><div class="kpi-sub">$18,908,476 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">146</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">18.6k</div><div class="kpi-sub">visitantes: 16.1k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.76%</div><div class="kpi-sub">-0.05pp vs Noviembre 2025</div></div>
-  </div>
-
-  <div class="section-title">Variación Diciembre 2025 vs Noviembre 2025</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Noviembre 2025</td>
-        <td>$15.3M</td>
-        <td>$13.7M</td>
-        <td>$12.1M</td>
-        <td>148</td>
-        <td>17.9k</td>
-        <td>0.81%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Diciembre 2025</td>
-        <td>$18.9M</td><td>$16.9M</td><td>$15.0M</td>
-        <td>146</td><td>18.6k</td><td>0.76%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+23.6%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+23.2%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+24.2%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-1.4%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+3.9%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-6.4%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Diciembre 2025</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$16,913,334</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-1,201,358</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-719,559</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$14,992,417</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$1,067,500</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$2,848,559</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$18,908,476</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Diciembre 2025</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Diciembre 2025</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Mounjaro 5 mg 1 Vial</td><td>9</td><td style="color:#6366f1;font-weight:600">$3.61M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Mounjaro 2.5 mg 1 Vial</td><td>6</td><td style="color:#6366f1;font-weight:600">$1.74M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>11</td><td style="color:#6366f1;font-weight:600">$1.26M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Vaxdil 10 mg 30 Tab.</td><td>8</td><td style="color:#6366f1;font-weight:600">$0.91M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Isotretinoina 20 mg 30 Cáp.</td><td>7</td><td style="color:#6366f1;font-weight:600">$0.79M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Finasterida 1 mg 28 Tab.</td><td>5</td><td style="color:#6366f1;font-weight:600">$0.76M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Isdin Oil Control Fusion Water SPF50</td><td>6</td><td style="color:#6366f1;font-weight:600">$0.64M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Eucerin Sun Oil Control SPF50 50 ml</td><td>7</td><td style="color:#6366f1;font-weight:600">$0.48M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Isdin Oil Control Medium Color SPF50</td><td>6</td><td style="color:#6366f1;font-weight:600">$0.48M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Nivea Sun Shine Control SPF50 ml</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.33M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Alula Gold Etapa 1 400 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.33M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Grazilan Orlistat 120 mg 40 Cáp.</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.33M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Acnotin 20 mg 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.25M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Exelges Multivitamínico 30 uds</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Isdin Retinal Intense 50 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Diciembre 2025 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-7">
-  <div class="banner">
-    <div class="banner-title">Cierre de Enero 2026 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$10.2M</div><div class="kpi-sub">$10,162,178 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">109</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">25.8k</div><div class="kpi-sub">visitantes: 22.9k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.41%</div><div class="kpi-sub">-0.35pp vs Diciembre 2025</div></div>
-  </div>
-
-  <div class="section-title">Variación Enero 2026 vs Diciembre 2025</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Diciembre 2025</td>
-        <td>$18.9M</td>
-        <td>$16.9M</td>
-        <td>$15.0M</td>
-        <td>146</td>
-        <td>18.6k</td>
-        <td>0.76%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Enero 2026</td>
-        <td>$10.2M</td><td>$8.9M</td><td>$7.7M</td>
-        <td>109</td><td>25.8k</td><td>0.41%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-46.3%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-47.6%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-48.4%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-25.3%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+38.5%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-46.2%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Enero 2026</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$8,861,559</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-230,796</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-896,412</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$7,734,352</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$958,300</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$1,469,527</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$10,162,178</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Enero 2026</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Enero 2026</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>14</td><td style="color:#6366f1;font-weight:600">$1.56M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Finasterida 1 mg 28 Tab.</td><td>8</td><td style="color:#6366f1;font-weight:600">$0.92M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Vaxdil 10 mg 30 Tab.</td><td>9</td><td style="color:#6366f1;font-weight:600">$0.83M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Isotretinoina 20 mg 30 Cáp.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.35M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Epiduo Forte 30 gr</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.34M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Zimaquin 50 mg 10 Tab.</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.30M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Ensure Advance Vainilla 850 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.25M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Testoviron Depot 250 mg Amp</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.23M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Acnotin 20 mg 30 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Prueba Rápida VIH Sangre</td><td>5</td><td style="color:#6366f1;font-weight:600">$0.21M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Oraquick Auto Prueba VIH Saliva</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.19M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Mounjaro 2.5 mg 1 Vial</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.18M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Eucerin Anti-pigment Dual Serum 30 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.18M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Fibrilok 500 mg 10 Tab.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.18M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Amiodarona 200 mg 10 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Enero 2026 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-8">
-  <div class="banner">
-    <div class="banner-title">Cierre de Febrero 2026 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$8.5M</div><div class="kpi-sub">$8,530,438 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">86</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">34.9k</div><div class="kpi-sub">visitantes: 32.1k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.22%</div><div class="kpi-sub">-0.18pp vs Enero 2026</div></div>
-  </div>
-
-  <div class="section-title">Variación Febrero 2026 vs Enero 2026</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Enero 2026</td>
-        <td>$10.2M</td>
-        <td>$8.9M</td>
-        <td>$7.7M</td>
-        <td>109</td>
-        <td>25.8k</td>
-        <td>0.41%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Febrero 2026</td>
-        <td>$8.5M</td><td>$7.2M</td><td>$6.5M</td>
-        <td>86</td><td>34.9k</td><td>0.22%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.1%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-19.2%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-16.0%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-21.1%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">+35.5%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-45.2%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Febrero 2026</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$7,157,012</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-278,253</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-379,819</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$6,498,939</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$796,700</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$1,234,798</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$8,530,438</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Febrero 2026</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Febrero 2026</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>13</td><td style="color:#6366f1;font-weight:600">$1.56M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Finasterida 1 mg 28 Tab.</td><td>6</td><td style="color:#6366f1;font-weight:600">$0.61M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Eucerin Sun Oil Control SPF50 50 ml</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.39M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Isotretinoina 20 mg 30 Cáp.</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.35M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Isdin Nutradeica Facial Gel 50 ml</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.31M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Epiduo Gel 30 gr</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.29M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Zopiclona 7.5 mg 30 Tab.</td><td>5</td><td style="color:#6366f1;font-weight:600">$0.24M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Isdin Retinal Intense 50 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.23M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Similac 1 Total Comfort 1400 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.21M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Anemidox 30 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.17M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Minoxidil Forte 5% 100 ml</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Acnotin 10 mg 30 Cáp.</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.15M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Isotretinoina 10 mg 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.14M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Isdin Ác. Hialurónico 30 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.14M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Pilogan Ultra 5% 60 ml</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.13M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Febrero 2026 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-9">
-  <div class="banner">
-    <div class="banner-title">Cierre de Marzo 2026 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$18.8M</div><div class="kpi-sub">$18,797,765 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">183</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">28.1k</div><div class="kpi-sub">visitantes: 25.1k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.62%</div><div class="kpi-sub">+0.40pp vs Febrero 2026</div></div>
-  </div>
-
-  <div class="section-title">Variación Marzo 2026 vs Febrero 2026</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Febrero 2026</td>
-        <td>$8.5M</td>
-        <td>$7.2M</td>
-        <td>$6.5M</td>
-        <td>86</td>
-        <td>34.9k</td>
-        <td>0.22%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Marzo 2026</td>
-        <td>$18.8M</td><td>$15.0M</td><td>$14.3M</td>
-        <td>183</td><td>28.1k</td><td>0.62%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+120.4%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+109.4%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+120.1%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+112.8%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-19.4%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+178.4%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Marzo 2026</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$14,983,903</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-120,294</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-557,336</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$14,306,273</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$1,773,300</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$2,718,192</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$18,797,765</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Marzo 2026</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Marzo 2026</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>28</td><td style="color:#6366f1;font-weight:600">$3.18M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Finasterida 1 mg 28 Tab.</td><td>13</td><td style="color:#6366f1;font-weight:600">$1.41M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Isotretinoina 20 mg 30 Cáp.</td><td>9</td><td style="color:#6366f1;font-weight:600">$0.97M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Epiduo Forte 30 gr</td><td>6</td><td style="color:#6366f1;font-weight:600">$0.68M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Epiduo Gel 30 gr</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.39M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Similac 2 5hmos 1400 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.37M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Isotretinoina 10 mg 30 Cáp.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.36M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Acnotin 10 mg 30 Cáp.</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.29M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Saxenda 6 mg 1 Pluma</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.25M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Prueba Rápida VIH Sangre</td><td>5</td><td style="color:#6366f1;font-weight:600">$0.25M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Iso Whey Protein 952 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.21M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Prueba Multidrogas Orina 5en1</td><td>6</td><td style="color:#6366f1;font-weight:600">$0.20M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Vaxdil 10 mg 30 Tab.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.19M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Similac 1 5hmos 1400 gr</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.19M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Similac Mamá 400 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.18M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Marzo 2026 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-10">
-  <div class="banner">
-    <div class="banner-title">Cierre de Abril 2026 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$16.2M</div><div class="kpi-sub">$16,202,410 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">169</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">N/D</div><div class="kpi-sub">N/D pedidos · N/D COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">22.9k</div><div class="kpi-sub">visitantes: 20.4k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.72%</div><div class="kpi-sub">+0.10pp vs Marzo 2026</div></div>
-  </div>
-
-  <div class="section-title">Variación Abril 2026 vs Marzo 2026</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Marzo 2026</td>
-        <td>$18.8M</td>
-        <td>$15.0M</td>
-        <td>$14.3M</td>
-        <td>183</td>
-        <td>28.1k</td>
-        <td>0.62%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Abril 2026</td>
-        <td>$16.2M</td><td>$14.1M</td><td>$12.4M</td>
-        <td>169</td><td>22.9k</td><td>0.72%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-13.8%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-5.8%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-13.3%</td>
-        <td style="background:#1e293b;color:#ef4444;font-weight:700;text-align:right;padding:7px 10px">-7.7%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-18.6%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+15.9%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Abril 2026</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$14,119,874</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-422,579</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-1,300,059</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$12,397,235</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$1,449,700</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$2,355,475</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$16,202,410</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Abril 2026</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">N/D COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">N/D</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">N/D</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">N/D</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Abril 2026</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>18</td><td style="color:#6366f1;font-weight:600">$2.16M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Isotretinoina 20 mg 30 Cáp.</td><td>13</td><td style="color:#6366f1;font-weight:600">$1.15M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Mounjaro 5 mg 1 Vial</td><td>1</td><td style="color:#6366f1;font-weight:600">$1.03M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Finasterida 1 mg 28 Tab.</td><td>7</td><td style="color:#6366f1;font-weight:600">$0.67M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Amiodarona 200 mg 10 Tab.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.65M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Ozempic 1 mg 4 mg/3 ml</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.53M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Orlistat 120 mg 60 Cáp.</td><td>5</td><td style="color:#6366f1;font-weight:600">$0.45M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Ensure Advance Vainilla 850 gr</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.40M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Isotretinoina 10 mg 30 Cáp.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.30M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Vaxdil 10 mg 30 Tab.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.30M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Tripack Minoxidil Forte 5% 60 ml</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.26M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Protector Solar Sunglass Gel SPF45</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Zopiclona 7.5 mg 30 Tab.</td><td>10</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Oraquick Auto Prueba VIH Saliva</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.20M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Acnotin 20 mg 30 Cáp.</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.20M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Abril 2026 · drogueriasunoa.com</div>
-</div>
-<div class="page" id="page-11">
-  <div class="banner">
-    <div class="banner-title">Cierre de Mayo 2026 – Uno A Droguerías</div>
-    <div class="banner-sub">Reporte mensual completo · Histórico Jun 2025–May 2026</div>
-  </div>
-
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-lbl" style="color:#6366f1;border-color:#6366f1">Total Recibido</div><div class="kpi-val" style="color:#6366f1">$20.7M</div><div class="kpi-sub">$20,660,268 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#10b981;border-color:#10b981">Pedidos</div><div class="kpi-val" style="color:#10b981">190</div><div class="kpi-sub">mes completo</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#ef4444;border-color:#ef4444">Cancelados</div><div class="kpi-val" style="color:#ef4444">20</div><div class="kpi-sub">10.5% pedidos · $1,467,460 COP</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#0ea5e9;border-color:#0ea5e9">Sesiones</div><div class="kpi-val" style="color:#0ea5e9">19.9k</div><div class="kpi-sub">visitantes: 17.4k</div></div>
-    <div class="kpi"><div class="kpi-lbl" style="color:#8b5cf6;border-color:#8b5cf6">Tasa de Conversión</div><div class="kpi-val" style="color:#8b5cf6">0.92%</div><div class="kpi-sub">+0.20pp vs Abril 2026</div></div>
-  </div>
-
-  <div class="section-title">Variación Mayo 2026 vs Abril 2026</div>
-  <div class="table-scroll" style="margin-bottom:16px"><table class="data-table">
-    <thead><tr>
-      <th style="text-align:left;width:90px"></th>
-      <th>Total Rec.</th><th>V. Brutas</th><th>V. Netas</th><th>Pedidos</th><th>Sesiones</th><th>Conv.%</th>
-    </tr></thead>
-    <tbody>
-      <tr class="alt-row">
-        <td style="font-weight:600">Abril 2026</td>
-        <td>$16.2M</td>
-        <td>$14.1M</td>
-        <td>$12.4M</td>
-        <td>169</td>
-        <td>22.9k</td>
-        <td>0.72%</td>
-      </tr>
-      <tr style="font-weight:700">
-        <td>Mayo 2026</td>
-        <td>$20.7M</td><td>$18.1M</td><td>$16.1M</td>
-        <td>190</td><td>19.9k</td><td>0.92%</td>
-      </tr>
-      <tr>
-        <td class="delta-label">∆</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+27.5%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+28.0%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+29.7%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+12.4%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">-13.2%</td>
-        <td style="background:#1e293b;color:#10b981;font-weight:700;text-align:right;padding:7px 10px">+27.7%</td>
-      </tr>
-    </tbody>
-  </table></div>
-
-  <div class="section-title">Desglose de Ventas – Mayo 2026</div>
-  <div class="two-col">
-    <table class="data-table">
-      <thead><tr><th style="text-align:left">Concepto</th><th>Valor (COP)</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Ventas Brutas</td><td style="text-align:right">$18,071,688</td></tr>
-        <tr><td style="color:#ef4444">— Descuentos</td><td style="text-align:right;color:#ef4444">-849,135</td></tr>
-        <tr class="alt-row"><td style="color:#ef4444">— Devoluciones / Anulaciones</td><td style="text-align:right;color:#ef4444">-1,147,876</td></tr>
-        <tr><td style="font-weight:700">= Ventas Netas</td><td style="text-align:right;font-weight:700">$16,074,678</td></tr>
-        <tr class="alt-row"><td>+ Envíos</td><td style="text-align:right">$1,532,200</td></tr>
-        <tr><td>+ Impuestos</td><td style="text-align:right">$3,053,391</td></tr>
-        <tr style="background:#6366f1"><td style="color:white;font-weight:700">TOTAL RECIBIDO</td><td style="text-align:right;color:white;font-weight:700">$20,660,268</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th style="text-align:left;background:#ef4444">Métrica</th><th style="background:#ef4444">Mayo 2026</th></tr></thead>
-      <tbody>
-        <tr class="alt-row"><td>Pedidos cancelados</td><td style="text-align:right">20</td></tr>
-        <tr><td>Valor cancelado</td><td style="text-align:right">$1,467,460 COP</td></tr>
-        <tr class="alt-row"><td>Motivo</td><td style="text-align:right">100% por el cliente</td></tr>
-        <tr><td>% sobre total pedidos</td><td style="text-align:right">10.5%</td></tr>
-        <tr class="alt-row"><td>Impacto en ventas</td><td style="text-align:right">8.1% de V.Brutas</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section-title">Top 15 Productos – Mayo 2026</div>
-  <div class="table-scroll">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">#</th>
-      <th style="text-align:left">Producto</th>
-      <th>Pedidos</th>
-      <th>Ventas Brutas</th>
-    </tr></thead>
-    <tbody>
-<tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">1</td><td style="text-align:left;max-width:200px">Finhet 1mg - Finasteride 30 Tab.</td><td>26</td><td style="color:#6366f1;font-weight:600">$2.97M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">2</td><td style="text-align:left;max-width:200px">Isotretinoina 20 mg 30 Cáp.</td><td>11</td><td style="color:#6366f1;font-weight:600">$1.59M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">3</td><td style="text-align:left;max-width:200px">Acnotin 20 mg 30 Cáp.</td><td>7</td><td style="color:#6366f1;font-weight:600">$0.98M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">4</td><td style="text-align:left;max-width:200px">Finasterida 1 mg 28 Tab.</td><td>8</td><td style="color:#6366f1;font-weight:600">$0.98M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">5</td><td style="text-align:left;max-width:200px">Amiodarona 200 mg 10 Tab.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.65M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">6</td><td style="text-align:left;max-width:200px">Panal Tena Comfort M 21 Un.</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.54M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">7</td><td style="text-align:left;max-width:200px">Pañal Tena Comfort L 21 Un.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.49M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">8</td><td style="text-align:left;max-width:200px">Ensure Advance Vainilla 850g+400g</td><td>2</td><td style="color:#6366f1;font-weight:600">$0.46M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">9</td><td style="text-align:left;max-width:200px">Eucerin Sun Face SPF50+ 50ml</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.42M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">10</td><td style="text-align:left;max-width:200px">Ensure Advance Vainilla 850 gr</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.41M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">11</td><td style="text-align:left;max-width:200px">Gestavit DHA 30 Cáp.</td><td>4</td><td style="color:#6366f1;font-weight:600">$0.29M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">12</td><td style="text-align:left;max-width:200px">Saxenda 6 mg 1 Pluma</td><td>1</td><td style="color:#6366f1;font-weight:600">$0.27M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">13</td><td style="text-align:left;max-width:200px">Escitrolam 20 mg 30 Tab.</td><td>7</td><td style="color:#6366f1;font-weight:600">$0.26M</td></tr><tr class=""><td style="color:#94a3b8;font-size:10px;padding:5px 8px">14</td><td style="text-align:left;max-width:200px">Orlistat 120 mg 60 Cáp.</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.22M</td></tr><tr class="alt-row"><td style="color:#94a3b8;font-size:10px;padding:5px 8px">15</td><td style="text-align:left;max-width:200px">Bedoyecta Tri 3 Ampollas</td><td>3</td><td style="color:#6366f1;font-weight:600">$0.21M</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="footer">Reporte Uno A Droguerías · Mayo 2026 · drogueriasunoa.com</div>
-</div>
-
-<!-- ═══ PÁGINA COMPARATIVO ═══ -->
-<div class="page" id="page-comp">
-  <div class="banner-indigo">
-    <div class="banner-title">Comparativo Jun 2025 – May 2026</div>
-    <div class="banner-sub-i">Evolución de ventas, pedidos, tráfico y conversión · 12 meses</div>
-  </div>
-
-  <div class="chart-box">
-    <div class="chart-title">Total Recibido por Mes (desglose apilado) y Pedidos</div>
-    <div style="position:relative;width:100%;height:200px"><canvas id="c-sales"></canvas></div>
-  </div>
-
-  <div class="section-title">Comparativo Mensual – 12 meses</div>
-  <div class="table-scroll" style="margin-bottom:16px">
-  <table class="data-table">
-    <thead><tr>
-      <th style="text-align:left">Mes</th><th>Pedidos</th><th>V.Brutas</th>
-      <th style="color:#f59e0b">Desc.</th><th style="color:#f59e0b">Dev/Anul</th>
-      <th>V.Netas</th><th>Envíos</th><th>Imptos</th>
-      <th style="color:#a5b4fc">Total Rec.</th><th>∆ Total</th>
-    </tr></thead>
-    <tbody><tr style="background:#e0e7ff;font-weight:700;font-size:11px">
-      <td style="padding:6px 8px;font-weight:700">May 26</td>
-      <td style="padding:6px 8px;text-align:right">190</td>
-      <td style="padding:6px 8px;text-align:right">$18.1M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$849K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$1148K</td>
-      <td style="padding:6px 8px;text-align:right">$16.1M</td>
-      <td style="padding:6px 8px;text-align:right">$1532K</td>
-      <td style="padding:6px 8px;text-align:right">$3053K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$20.7M</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+27.5%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Abr 26</td>
-      <td style="padding:6px 8px;text-align:right">169</td>
-      <td style="padding:6px 8px;text-align:right">$14.1M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$423K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$1300K</td>
-      <td style="padding:6px 8px;text-align:right">$12.4M</td>
-      <td style="padding:6px 8px;text-align:right">$1450K</td>
-      <td style="padding:6px 8px;text-align:right">$2355K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$16.2M</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-13.8%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Mar 26</td>
-      <td style="padding:6px 8px;text-align:right">183</td>
-      <td style="padding:6px 8px;text-align:right">$15.0M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$120K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$557K</td>
-      <td style="padding:6px 8px;text-align:right">$14.3M</td>
-      <td style="padding:6px 8px;text-align:right">$1773K</td>
-      <td style="padding:6px 8px;text-align:right">$2718K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$18.8M</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+120.4%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Feb 26</td>
-      <td style="padding:6px 8px;text-align:right">86</td>
-      <td style="padding:6px 8px;text-align:right">$7.2M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$278K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$380K</td>
-      <td style="padding:6px 8px;text-align:right">$6.5M</td>
-      <td style="padding:6px 8px;text-align:right">$797K</td>
-      <td style="padding:6px 8px;text-align:right">$1235K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$8.5M</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-16.1%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Ene 26</td>
-      <td style="padding:6px 8px;text-align:right">109</td>
-      <td style="padding:6px 8px;text-align:right">$8.9M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$231K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$896K</td>
-      <td style="padding:6px 8px;text-align:right">$7.7M</td>
-      <td style="padding:6px 8px;text-align:right">$958K</td>
-      <td style="padding:6px 8px;text-align:right">$1470K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$10.2M</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-46.3%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Dic 25</td>
-      <td style="padding:6px 8px;text-align:right">146</td>
-      <td style="padding:6px 8px;text-align:right">$16.9M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$1201K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$720K</td>
-      <td style="padding:6px 8px;text-align:right">$15.0M</td>
-      <td style="padding:6px 8px;text-align:right">$1068K</td>
-      <td style="padding:6px 8px;text-align:right">$2849K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$18.9M</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+23.6%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Nov 25</td>
-      <td style="padding:6px 8px;text-align:right">148</td>
-      <td style="padding:6px 8px;text-align:right">$13.7M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$952K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$705K</td>
-      <td style="padding:6px 8px;text-align:right">$12.1M</td>
-      <td style="padding:6px 8px;text-align:right">$932K</td>
-      <td style="padding:6px 8px;text-align:right">$2294K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$15.3M</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+187.0%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Oct 25</td>
-      <td style="padding:6px 8px;text-align:right">67</td>
-      <td style="padding:6px 8px;text-align:right">$4.4M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$201K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$147K</td>
-      <td style="padding:6px 8px;text-align:right">$4.0M</td>
-      <td style="padding:6px 8px;text-align:right">$515K</td>
-      <td style="padding:6px 8px;text-align:right">$769K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$5.3M</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-29.8%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Sep 25</td>
-      <td style="padding:6px 8px;text-align:right">80</td>
-      <td style="padding:6px 8px;text-align:right">$6.9M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$128K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$832K</td>
-      <td style="padding:6px 8px;text-align:right">$6.0M</td>
-      <td style="padding:6px 8px;text-align:right">$470K</td>
-      <td style="padding:6px 8px;text-align:right">$1137K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$7.6M</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+5.3%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Ago 25</td>
-      <td style="padding:6px 8px;text-align:right">76</td>
-      <td style="padding:6px 8px;text-align:right">$6.2M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$132K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$423K</td>
-      <td style="padding:6px 8px;text-align:right">$5.6M</td>
-      <td style="padding:6px 8px;text-align:right">$502K</td>
-      <td style="padding:6px 8px;text-align:right">$1071K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$7.2M</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+8.1%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Jul 25</td>
-      <td style="padding:6px 8px;text-align:right">82</td>
-      <td style="padding:6px 8px;text-align:right">$5.6M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$51K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$430K</td>
-      <td style="padding:6px 8px;text-align:right">$5.1M</td>
-      <td style="padding:6px 8px;text-align:right">$546K</td>
-      <td style="padding:6px 8px;text-align:right">$978K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$6.7M</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-18.2%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px;font-weight:500">Jun 25</td>
-      <td style="padding:6px 8px;text-align:right">81</td>
-      <td style="padding:6px 8px;text-align:right">$7.0M</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$165K</td>
-      <td style="padding:6px 8px;text-align:right;color:#f59e0b">$387K</td>
-      <td style="padding:6px 8px;text-align:right">$6.4M</td>
-      <td style="padding:6px 8px;text-align:right">$490K</td>
-      <td style="padding:6px 8px;text-align:right">$1224K</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">$8.2M</td>
-      <td style="padding:6px 8px;text-align:right;color:#94a3b8;font-weight:700">—</td>
-    </tr></tbody>
-  </table>
-  </div>
-
-  <div class="section-title">Tráfico y Conversión (Jun 2025–May 2026)</div>
-  <div class="comp-grid">
-    <table class="data-table">
-      <thead><tr>
-        <th style="text-align:left">Mes</th><th>Sesiones</th>
-        <th style="color:#a5b4fc">Conv.</th><th>∆ Conv.</th>
-      </tr></thead>
-      <tbody><tr style="background:#e0e7ff;font-weight:700;font-size:11px">
-      <td style="padding:6px 8px">May 26</td>
-      <td style="padding:6px 8px;text-align:right">19.9k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.92%</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+27.7%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px">Abr 26</td>
-      <td style="padding:6px 8px;text-align:right">22.9k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.72%</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+15.9%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px">Mar 26</td>
-      <td style="padding:6px 8px;text-align:right">28.1k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.62%</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+178.4%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px">Feb 26</td>
-      <td style="padding:6px 8px;text-align:right">34.9k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.22%</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-45.2%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px">Ene 26</td>
-      <td style="padding:6px 8px;text-align:right">25.8k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.41%</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-46.2%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px">Dic 25</td>
-      <td style="padding:6px 8px;text-align:right">18.6k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.76%</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-6.4%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px">Nov 25</td>
-      <td style="padding:6px 8px;text-align:right">17.9k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.81%</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+118.2%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px">Oct 25</td>
-      <td style="padding:6px 8px;text-align:right">16.7k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.37%</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-11.5%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px">Sep 25</td>
-      <td style="padding:6px 8px;text-align:right">17.6k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.42%</td>
-      <td style="padding:6px 8px;text-align:right;color:#ef4444;font-weight:700">-16.2%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px">Ago 25</td>
-      <td style="padding:6px 8px;text-align:right">15.0k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.50%</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+1.3%</td>
-    </tr><tr style="font-size:11px">
-      <td style="padding:6px 8px">Jul 25</td>
-      <td style="padding:6px 8px;text-align:right">15.0k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.49%</td>
-      <td style="padding:6px 8px;text-align:right;color:#10b981;font-weight:700">+7.7%</td>
-    </tr><tr style="background:#f8fafc;font-size:11px">
-      <td style="padding:6px 8px">Jun 25</td>
-      <td style="padding:6px 8px;text-align:right">16.8k</td>
-      <td style="padding:6px 8px;text-align:right;color:#6366f1;font-weight:700">0.46%</td>
-      <td style="padding:6px 8px;text-align:right;color:#94a3b8;font-weight:700">—</td>
-    </tr></tbody>
-    </table>
-    <div class="chart-box" style="margin-bottom:0">
-      <div style="position:relative;width:100%;height:220px"><canvas id="c-sess"></canvas></div>
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="val" style="color:var(--purp)">$20.66M</div>
+      <div class="lbl">Total Recibido (COP)</div>
+      <div class="delta up">▲27.5% vs Abr</div>
+    </div>
+    <div class="kpi">
+      <div class="val" style="color:var(--green)">190</div>
+      <div class="lbl">Pedidos</div>
+      <div class="delta up">▲12.4% vs Abr</div>
+    </div>
+    <div class="kpi">
+      <div class="val" style="color:var(--red)">20 <span style="font-size:.9rem">(10.5%)</span></div>
+      <div class="lbl">Cancelados</div>
+      <div class="delta" style="color:var(--muted)">del total Mayo</div>
+    </div>
+    <div class="kpi">
+      <div class="val" style="color:#8b5cf6">0.92%</div>
+      <div class="lbl">Conversión</div>
+      <div class="delta up">▲27.7% vs Abr</div>
     </div>
   </div>
-  <div class="footer">Reporte generado automáticamente · Uno A Droguerías · drogueriasunoa.com</div>
+
+  <!-- Chart: Ventas -->
+  <div class="card">
+    <h2>Ventas Históricas – 12 Meses (Millones COP)</h2>
+    <div class="tabs">
+      <button class="tab active" onclick="showSalesChart('total')">Total Recibido</button>
+      <button class="tab" onclick="showSalesChart('gross')">Ventas Brutas</button>
+      <button class="tab" onclick="showSalesChart('net')">Ventas Netas</button>
+    </div>
+    <canvas id="salesChart"></canvas>
+  </div>
+
+  <!-- Chart: Pedidos & Sesiones -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <div class="card">
+      <h2>Pedidos Mensuales</h2>
+      <canvas id="ordersChart"></canvas>
+    </div>
+    <div class="card">
+      <h2>Sesiones & Conversión</h2>
+      <canvas id="sessChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Top 20 -->
+  <div class="card">
+    <h2>Top 20 Productos – Mayo 2026</h2>
+    <table>
+      <thead><tr><th>#</th><th>Producto</th><th>Ventas Brutas</th><th>Pedidos</th></tr></thead>
+      <tbody><tr><td>1</td><td>Finhet 1mg - Finasteride 30 Tab</td><td>$2.97M</td><td>26</td></tr><tr><td>2</td><td>Isotretinoina 20 mg 30 Cap</td><td>$1.59M</td><td>11</td></tr><tr><td>3</td><td>Acnotin 20 mg (isotretinoina) 30 Cap</td><td>$0.98M</td><td>7</td></tr><tr><td>4</td><td>Finasterida 1 mg 28 Tab</td><td>$0.98M</td><td>8</td></tr><tr><td>5</td><td>Amiodarona 200 mg 10 Tab</td><td>$0.65M</td><td>4</td></tr><tr><td>6</td><td>Panal Tena Comfort M 21 Und</td><td>$0.54M</td><td>3</td></tr><tr><td>7</td><td>Panal Tena Comfort L 21 Und</td><td>$0.49M</td><td>4</td></tr><tr><td>8</td><td>Ensure Advance Vainilla 850gr+400gr</td><td>$0.46M</td><td>2</td></tr><tr><td>9</td><td>Eucerin Sun Face Oil Control 50ml</td><td>$0.42M</td><td>4</td></tr><tr><td>10</td><td>Ensure Advance Vainilla 850 gr</td><td>$0.41M</td><td>3</td></tr><tr><td>11</td><td>Gestavit Dha 30 Cap</td><td>$0.29M</td><td>4</td></tr><tr><td>12</td><td>Saxenda 6 mg 1 Pluma</td><td>$0.27M</td><td>1</td></tr><tr><td>13</td><td>Escitrolam 20 mg 30 Tab</td><td>$0.26M</td><td>7</td></tr><tr><td>14</td><td>Orlistat 120 mg 60 Cap</td><td>$0.22M</td><td>3</td></tr><tr><td>15</td><td>Bedoyecta Tri 3 Ampollas</td><td>$0.21M</td><td>3</td></tr><tr><td>16</td><td>Zopiclona 7.5 mg 50 Tab</td><td>$0.19M</td><td>5</td></tr><tr><td>17</td><td>Rozelaic Gel 30 gr</td><td>$0.18M</td><td>2</td></tr><tr><td>18</td><td>Afelius Oil Free 60 gr</td><td>$0.17M</td><td>2</td></tr><tr><td>19</td><td>Eucerin Sun Face Color Claro 50ml</td><td>$0.16M</td><td>2</td></tr><tr><td>20</td><td>Isoface 20 mg 40 Cap</td><td>$0.16M</td><td>1</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- Top 15 por mes -->
+  <div class="card">
+    <h2>Top 15 Productos por Mes</h2>
+    <div class="tabs" id="monthTabs"></div>
+    <table id="top15Table">
+      <thead><tr><th>#</th><th>Producto</th><th>Ventas Brutas</th><th>Pedidos</th></tr></thead>
+      <tbody id="top15Body"></tbody>
+    </table>
+  </div>
 </div>
 
-<!-- ═══ PÁGINA TOP 20 ═══ -->
-<div class="page" id="page-top20">
-  <div class="banner">
-    <div class="banner-title">Top 20 Productos – Mayo 2026</div>
-    <div class="banner-sub-s" style="color:#94a3b8">Unidades vendidas (pedidos) con valor en COP como dato complementario</div>
-  </div>
-  <div class="chart-box">
-    <div style="position:relative;width:100%;height:480px"><canvas id="c-top20"></canvas></div>
-  </div>
-  <div class="footer">Reporte generado automáticamente · Shopify May 2026 · Uno A Droguerías</div>
-</div>
-
-</div><!-- /container -->
+<footer>Reporte generado automáticamente · Mayo 2026 · Uno A Droguerías</footer>
 
 <script>
-const labels  = ["Jun 25", "Jul 25", "Ago 25", "Sep 25", "Oct 25", "Nov 25", "Dic 25", "Ene 26", "Feb 26", "Mar 26", "Abr 26", "May 26"];
-const nets    = [6443476, 5146754, 5635207, 5981914, 4046337, 12072413, 14992417, 7734352, 6498939, 14306273, 12397235, 16074678];
-const ships   = [489500, 545500, 502400, 469800, 515000, 931800, 1067500, 958300, 796700, 1773300, 1449700, 1532200];
-const taxesD  = [1224261, 977883, 1070689, 1136564, 768804, 2293759, 2848559, 1469527, 1234798, 2718192, 2355475, 3053391];
-const ords    = [81, 82, 76, 80, 67, 148, 146, 109, 86, 183, 169, 190];
-const sessD   = [16774, 14969, 14983, 17643, 16704, 17900, 18602, 25770, 34906, 28123, 22883, 19871];
-const convD   = [0.459, 0.4944, 0.5006, 0.4194, 0.3712, 0.8101, 0.758, 0.4075, 0.2235, 0.6223, 0.7211, 0.9209];
-const top20Names  = ["Isoface 20mg 40 C\u00e1ps.", "Eucerin Sun Face Color SPF50+ 50ml", "Afelius Oil Free 60g", "Rozelaic Gel 30g", "Zopiclona 7.5mg 50 Tab.", "Bedoyecta Tri 3 Ampollas", "Orlistat 120mg 60 C\u00e1p.", "Escitrolam 20mg 30 Tab.", "Saxenda 6mg 1 Pluma", "Gestavit DHA 30 C\u00e1p.", "Ensure Advance Vainilla 850g", "Eucerin Sun Face SPF50+ 50ml", "Ensure Advance Vainilla 850g+400g", "Pa\u00f1al Tena Comfort Talla L 21 Un.", "Panal Tena Comfort Talla M 21 Un.", "Amiodarona 200mg 10 Tab.", "Finasterida 1mg 28 Tab.", "Acnotin 20mg (isotretinoina) 30 C\u00e1p.", "Isotretinoina 20mg 30 C\u00e1p.", "Finhet 1mg \u2013 Finasteride 30 Tab."];
-const top20Units  = [1, 2, 2, 2, 5, 3, 3, 7, 1, 4, 3, 4, 2, 4, 3, 4, 8, 7, 11, 26];
-const top20M      = [0.16, 0.16, 0.17, 0.18, 0.19, 0.21, 0.22, 0.26, 0.27, 0.29, 0.41, 0.42, 0.46, 0.49, 0.54, 0.65, 0.98, 0.98, 1.59, 2.97];
+const LABELS   = ["Jun 25", "Jul 25", "Ago 25", "Sep 25", "Oct 25", "Nov 25", "Dic 25", "Ene 26", "Feb 26", "Mar 26", "Abr 26", "May 26"];
+const GROSS    = [6.99497125, 5.62781418, 6.18952833, 6.94152001, 4.39479054, 13.729617189999999, 16.91333396, 8.86155935, 7.15701157, 14.98390319, 14.11987366, 18.07168845];
+const NET      = [6.44347648, 5.14675361, 5.63520688, 5.9819144699999995, 4.04633667, 12.072412980000001, 14.99241722, 7.73435163, 6.49893914, 14.3062731, 12.39723533, 16.07467765];
+const TOTAL    = [8.157237, 6.67013685, 7.2082962, 7.5882783, 5.3301407, 15.2979715, 18.9084765, 10.1621785, 8.530437599999999, 18.797765, 16.20241, 20.6602685];
+const ORDERS   = [81, 82, 76, 80, 67, 148, 146, 109, 86, 183, 169, 190];
+const SESSIONS = [16774, 14969, 14983, 17643, 16704, 17900, 18602, 25770, 34906, 28123, 22883, 19871];
+const CONV     = [0.459, 0.4944, 0.5006, 0.4194, 0.3712, 0.8101, 0.758, 0.4075, 0.2235, 0.6223, 0.7211, 0.9209];
+const TOP15    = [[["Finhet 1mg Finasteride", 10, 1404453.77], ["Tretinex 20mg", 6, 895798.31], ["Similac 2 5hmos 1400gr", 1, 335966.38], ["Orlistat 120mg 60Cap", 4, 287394.96], ["Dorzolamida+Timolol Gotas", 1, 266722.68], ["Ensure Advance Vainilla 850gr", 1, 253613.44], ["Aurasert 100mg Sertralina", 3, 169411.75], ["Anemidox 30Cap", 2, 162857.14], ["Isotretinoina 10mg 30Cap", 2, 149411.76], ["Tramadol 100mg Gotas", 3, 116974.79], ["Neo Fungina Polvo 200gr", 1, 113190.75], ["Metformina 850mg 30Tab", 4, 111596.64], ["X Ray Dol 80Tab", 1, 105798.32], ["Atorvastatina 40mg 30Tab", 2, 102100.84], ["Lidocaina Hidrocortisona Ungt", 1, 101848.74]], [["Finhet 1mg Finasteride", 17, 1560504.18], ["Tretinex 20mg", 2, 474369.75], ["Tramadol 100mg Gotas", 5, 154789.91], ["K-micot 1% Spray Terbinafina", 2, 147899.16], ["Betatreinta Ampolla", 4, 134117.64], ["Vertigoheel 100Tab", 1, 126722.69], ["Neubalin Pregabalina 150mg", 1, 117226.89], ["Hies-toffer Plus 360ml", 1, 113613.45], ["Fexofenadina 180mg", 1, 113193.28], ["Aurasert 100mg Sertralina", 2, 112941.18], ["Sertranquil 50mg Sertralina", 5, 109915.97], ["Vita Zinc-f Silver Omega 3", 1, 100504.2], ["Symbicort Rapihaler 160", 1, 99579.83], ["Crema Ponds Age Miracle", 1, 85546.22], ["Crema Humectante Lureac 15%", 1, 83613.45]], [["Finhet 1mg Finasteride", 17, 1704789.89], ["Acnotin 20mg Isotretinoina", 4, 693529.4], ["Eucerin PH5 Locion 400ml", 1, 324369.75], ["Dinive 20mg Memantina", 2, 263865.55], ["Ensure Advance Vainilla 850gr", 1, 221680.67], ["Arawak Crema Antiedad", 1, 183193.28], ["Tramadol 100mg Gotas", 7, 152352.94], ["Isotretinoina 10mg 30Cap", 2, 149411.74], ["Isoface 10mg 30Cap", 1, 125966.39], ["Enteroplex Nutrabiotics 180gr", 1, 104117.64], ["Vaxdil 10mg Minoxidil Tab", 1, 100672.27], ["Neubalin Pregabalina 150mg", 1, 93781.51], ["Minoxidil 5% Locion 60ml", 1, 92647.06], ["Anemidox 30Cap", 1, 83109.24], ["Bellaface Suave 28Tab", 1, 71008.39]], [["Finhet 1mg Finasteride", 19, 1912773.05], ["Gestavit Dha 30Cap", 4, 1022352.94], ["Isoface 20mg 40Cap", 2, 319159.66], ["Acnotin 10mg Isotretinoina", 2, 255126.05], ["Allegra 180mg 10Tab", 1, 170588.24], ["Tramadol 100mg Gotas", 7, 168823.51], ["Jardiance Duo 12.5_1000mg", 1, 164201.68], ["Traumeel Gotas 30ml", 1, 156134.46], ["Acnotin 20mg Isotretinoina", 1, 122605.04], ["Fotoprotector Isdin Oil Ctrl", 1, 114789.92], ["Ferroprotina 40mg 30Sob", 1, 99921.84], ["Galvus Met 50_1000mg", 1, 99915.96], ["Limpiaderm Crema 20gr", 2, 87647.05], ["Dizmopraz 30mg Lansoprazol", 1, 76974.79], ["Dolex Avanzado 100Tab", 1, 76890.76]], [["Finhet 1mg Finasteride", 17, 1157731.03], ["Ensure Advance Vainilla 850gr", 1, 221680.67], ["Aurasert 100mg Sertralina", 3, 196134.46], ["Vitybell 30Cap Blandas", 1, 189747.9], ["Kenacort IA 10mg Ampolla", 4, 175966.37], ["Isoface 20mg 40Cap", 1, 159579.83], ["Versatis 5% Parches", 1, 152941.17], ["Hyabak Hipotonico 10ml", 1, 132605.04], ["Cliogen T Crema 20gr", 2, 125546.22], ["Tramadol 100mg Gotas", 5, 111176.46], ["Femiane 21 Grageas", 1, 105208.4], ["Derprosol Clobetasol 40gr", 2, 100168.06], ["Vaxdil 10mg Minoxidil Tab", 2, 100000.0], ["Symbicort Rapihaler 160", 1, 95714.29], ["Biogaia + Vitamina D3 5ml", 1, 92857.14]], [["Eucerin Sun Face Oil Ctrl 50ml", 42, 3552957.8], ["Finhet 1mg Finasteride", 20, 2265125.94], ["Isotretinoina 20mg 30Cap", 8, 894957.98], ["Similac 1 5hmos 1400gr", 2, 563445.36], ["Finasterida 1mg 28Tab", 4, 428823.51], ["Vaxdil 10mg Minoxidil Tab", 4, 350000.0], ["Fotoprotector Isdin Oil Ctrl", 2, 319075.62], ["Isoface 20mg 40Cap", 2, 314117.65], ["Fotoprotector Isdin Color Claro", 2, 269096.63], ["Acnotin 20mg Isotretinoina", 1, 245210.08], ["Ensure Advance Vainilla 850gr", 1, 221680.67], ["Alpina Baby Nutrimax E3 800gr", 2, 201344.54], ["Tramadol 100mg Gotas", 6, 181176.46], ["Loceryl 5% Laca 2.5ml", 2, 146915.95], ["Exelges Multivitaminico 30ud", 1, 141008.4]], [["Mounjaro 5mg Tirzepatida", 9, 3606806.69], ["Mounjaro 2.5mg Tirzepatida", 6, 1743529.39], ["Finhet 1mg Finasteride", 11, 1258403.31], ["Vaxdil 10mg Minoxidil Tab", 8, 906722.67], ["Isotretinoina 20mg 30Cap", 7, 793361.3], ["Finasterida 1mg 28Tab", 5, 763529.39], ["Fotoprotector Isdin Oil Ctrl", 6, 637268.87], ["Eucerin Sun Face Oil Ctrl 50ml", 7, 483445.34], ["Fotoprotector Isdin Color Claro", 6, 481932.77], ["Nivea Sun Shine Control 50ml", 2, 327983.18], ["Alula Gold Etapa 1 400gr", 1, 325630.24], ["Grazilan Orlistat 120mg 40Cap", 3, 325126.04], ["Acnotin 20mg Isotretinoina", 1, 245210.08], ["Exelges Multivitaminico 30ud", 3, 223277.31], ["Isdin Rejuvenate Retinal 50ml", 1, 218403.36]], [["Finhet 1mg Finasteride", 14, 1560420.16], ["Finasterida 1mg 28Tab", 8, 918907.54], ["Vaxdil 10mg Minoxidil Tab", 9, 826890.72], ["Isotretinoina 20mg 30Cap", 4, 352605.02], ["Epiduo Forte 30gr", 3, 342605.01], ["Zimaquin 50mg 10Tab", 3, 299411.76], ["Ensure Advance Vainilla 850gr", 1, 250252.09], ["Testoviron Depot 250mg", 2, 234621.84], ["Acnotin 20mg Isotretinoina", 2, 220689.06], ["Prueba Rapida VIH Sangre", 5, 207983.18], ["Oraquick Prueba VIH Saliva", 4, 194621.84], ["Mounjaro 2.5mg Tirzepatida", 1, 178907.56], ["Eucerin Anti-pigment Serum", 1, 177226.89], ["Fibrilok 500mg Ac Tranexamico", 2, 175630.26], ["Amiodarona 200mg 10Tab", 1, 151008.4]], [["Finhet 1mg Finasteride", 13, 1560420.15], ["Finasterida 1mg 28Tab", 6, 612605.03], ["Eucerin Sun Face Oil Ctrl 50ml", 4, 390336.12], ["Isotretinoina 20mg 30Cap", 3, 352605.02], ["Isdin Nutradeica Gel Cream 50ml", 3, 311470.59], ["Epiduo Gel 30gr", 3, 290126.04], ["Zopiclona 7.5mg 30Tab", 5, 236386.56], ["Isdin Rejuvenate Retinal 50ml", 1, 230420.16], ["Similac 1 Total Comfort HMO", 1, 212521.01], ["Anemidox 30Cap", 2, 172184.87], ["Minoxidil Forte 5% Locion 100ml", 2, 151764.7], ["Acnotin 10mg Isotretinoina", 2, 145378.15], ["Isotretinoina 10mg 30Cap", 1, 139327.73], ["Suero Isdin Ac Hyaluronico 30ml", 1, 138991.6], ["Pilogan Ultra 5% Locion 60ml", 3, 132764.7]], [["Finhet 1mg Finasteride", 28, 3176806.66], ["Finasterida 1mg 28Tab", 13, 1408991.58], ["Isotretinoina 20mg 30Cap", 9, 969663.83], ["Epiduo Forte 30gr", 6, 683697.48], ["Epiduo Gel 30gr", 4, 385462.2], ["Similac 2 5hmos 1400gr", 2, 367899.16], ["Isotretinoina 10mg 30Cap", 4, 358403.37], ["Acnotin 10mg Isotretinoina", 3, 290756.31], ["Saxenda 6mg Pluma", 2, 251932.77], ["Prueba Rapida VIH Sangre", 5, 249579.83], ["Iso Whey Protein 952gr", 2, 211596.64], ["Prueba Multidrogas Orina 5en1", 6, 198571.45], ["Vaxdil 10mg Minoxidil Tab", 1, 190924.37], ["Similac 1 5hmos 1400gr", 1, 187815.13], ["2 Similac Mama 400gr", 2, 180672.26]], [["Finhet 1mg Finasteride", 18, 2164453.75], ["Isotretinoina 20mg 30Cap", 13, 1145966.33], ["Mounjaro 5mg Tirzepatida", 1, 1028235.29], ["Finasterida 1mg 28Tab", 7, 673865.53], ["Amiodarona 200mg 10Tab", 4, 654453.78], ["Ozempic 1mg Inyectable", 1, 534453.78], ["Orlistat 120mg 60Cap", 5, 448235.25], ["Ensure Advance Vainilla 850gr", 2, 399327.73], ["Isotretinoina 10mg 30Cap", 4, 302184.88], ["Vaxdil 10mg Minoxidil Tab", 4, 297478.98], ["Tripack Minoxidil Forte 5%", 2, 264705.88], ["Protector Solar Sunglass 80gr", 2, 221092.43], ["Zopiclona 7.5mg 30Tab", 10, 215546.21], ["Oraquick Prueba VIH Saliva", 3, 200000.0], ["Acnotin 20mg Isotretinoina", 1, 196470.58]], [["Finhet 1mg Finasteride", 26, 2969831.86], ["Isotretinoina 20mg 30Cap", 11, 1591764.67], ["Acnotin 20mg Isotretinoina", 7, 981445.35], ["Finasterida 1mg 28Tab", 8, 980168.04], ["Amiodarona 200mg 10Tab", 4, 654453.78], ["Panal Tena Comfort M 21Und", 3, 539495.79], ["Panal Tena Comfort L 21Und", 4, 485042.0], ["Ensure Advance Vainilla 850gr+400gr", 2, 461092.42], ["Eucerin Sun Face Oil Ctrl 50ml", 4, 419243.67], ["Ensure Advance Vainilla 850gr", 3, 413949.57], ["Gestavit Dha 30Cap", 4, 286722.68], ["Saxenda 6mg Pluma", 1, 267058.82], ["Escitrolam 20mg 30Tab", 7, 262058.81], ["Orlistat 120mg 60Cap", 3, 224117.63], ["Bedoyecta Tri 3Ampollas", 3, 207310.93]]];
 
-Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif";
-Chart.defaults.font.size = 10;
-const GRID = 'rgba(0,0,0,0.06)';
-const TEXT = '#475569';
-
-function fmt(v){return '$'+(v/1e6).toFixed(1)+'M';}
-
-// Plugin: etiquetas encima de cada punto/barra
-const datalabelsPlugin = {
-  id:'customLabels',
-  afterDatasetsDraw(chart){
-    const ctx = chart.ctx;
-    chart.data.datasets.forEach((ds,di)=>{
-      const meta = chart.getDatasetMeta(di);
-      if(meta.hidden) return;
-      meta.data.forEach((el,i)=>{
-        const v = ds.data[i];
-        if(v==null) return;
-        let label='', color='', fs=9, fw='600';
-        if(ds.type==='line'||ds.showLabels){
-          // líneas: mostrar valor encima del punto
-          if(ds.yAxisID==='y2'||ds.isOrders) label=String(v);
-          else if(ds.yAxisID==='yc') label=v.toFixed(2)+'%';
-          else label=String(v);
-          color=ds.borderColor||ds.backgroundColor||'#475569';
-          const x=el.x, y=el.y-8;
-          ctx.save();
-          ctx.font=`${fw} ${fs}px -apple-system,sans-serif`;
-          ctx.fillStyle=color;
-          ctx.textAlign='center';
-          ctx.fillText(label,x,y);
-          ctx.restore();
-        } else if(ds.type==='bar'&&!ds.stack){
-          // barras simples: encima
-          label = ds.fmtFn ? ds.fmtFn(v) : String(v);
-          color = '#475569';
-          const x=el.x, y=el.y-5;
-          ctx.save();
-          ctx.font=`${fw} ${fs}px -apple-system,sans-serif`;
-          ctx.fillStyle=color;
-          ctx.textAlign='center';
-          ctx.fillText(label,x,y);
-          ctx.restore();
-        }
-      });
-    });
-    // Para barras apiladas: etiqueta del total encima de la última pila
-    const stackedDatasets = chart.data.datasets.filter(d=>d.stack);
-    if(stackedDatasets.length>0){
-      const n = chart.data.labels.length;
-      for(let i=0;i<n;i++){
-        let total=0;
-        stackedDatasets.forEach(d=>{total+=d.data[i]||0;});
-        const lastDs = chart.getDatasetMeta(stackedDatasets.length-1);
-        if(!lastDs.hidden && lastDs.data[i]){
-          const el=lastDs.data[i];
-          const label='$'+(total/1e6).toFixed(1)+'M';
-          ctx.save();
-          ctx.font=`600 9px -apple-system,sans-serif`;
-          ctx.fillStyle='#1e293b';
-          ctx.textAlign='center';
-          ctx.fillText(label,el.x,el.y-6);
-          ctx.restore();
-        }
-      }
+const cfg = (labels, datasets) => ({
+  type:'line', data:{labels, datasets},
+  options:{ responsive:true, maintainAspectRatio:true,
+    plugins:{ legend:{ labels:{ color:'#94a3b8', boxWidth:12 } } },
+    scales:{
+      x:{ ticks:{ color:'#94a3b8' }, grid:{ color:'#1e293b' } },
+      y:{ ticks:{ color:'#94a3b8' }, grid:{ color:'#334155' } }
     }
   }
-};
-
-// Totales por mes para la línea
-const totals = nets.map((n,i)=>n+ships[i]+taxesD[i]);
-
-// Sales chart — barras apiladas (Netas+Envíos+Imptos) + línea pedidos con etiquetas
-new Chart(document.getElementById('c-sales'),{
-  data:{labels,datasets:[
-    {type:'bar',label:'Ventas Netas',data:nets,backgroundColor:'#6366f1',stack:'s'},
-    {type:'bar',label:'Envíos',data:ships,backgroundColor:'#0ea5e9',stack:'s'},
-    {type:'bar',label:'Impuestos',data:taxesD,backgroundColor:'#8b5cf6',stack:'s'},
-    {type:'line',label:'Pedidos (eje der.)',data:ords,borderColor:'#f59e0b',backgroundColor:'#f59e0b',
-      borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#f59e0b',tension:0.2,yAxisID:'y2',showLabels:true,isOrders:true}
-  ]},
-  options:{responsive:true,maintainAspectRatio:false,
-    scales:{
-      x:{ticks:{color:TEXT,font:{size:9}},grid:{color:GRID}},
-      y:{stacked:true,ticks:{color:TEXT,callback:v=>'$'+(v/1e6).toFixed(0)+'M'},grid:{color:GRID}},
-      y2:{position:'right',ticks:{color:'#f59e0b',callback:v=>String(v)},grid:{display:false}}
-    },
-    plugins:{
-      legend:{position:'bottom',labels:{color:TEXT,boxWidth:12,padding:10}},
-      tooltip:{callbacks:{label:ctx=>{
-        if(ctx.dataset.yAxisID==='y2') return ' Pedidos: '+ctx.parsed.y;
-        return ' '+ctx.dataset.label+': $'+(ctx.parsed.y/1e6).toFixed(1)+'M';
-      }}}
-    }
-  },
-  plugins:[datalabelsPlugin]
 });
 
-// Sessions chart
-new Chart(document.getElementById('c-sess'),{
-  data:{labels,datasets:[
-    {type:'bar',label:'Sesiones',data:sessD,backgroundColor:'#0ea5e9',fmtFn:v=>(v/1000).toFixed(1)+'k'},
-    {type:'line',label:'Conv. %',data:convD,borderColor:'#8b5cf6',backgroundColor:'#8b5cf6',
-      borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#8b5cf6',yAxisID:'yc',tension:0.2,showLabels:true}
-  ]},
-  options:{responsive:true,maintainAspectRatio:false,
-    scales:{
-      x:{ticks:{color:TEXT,font:{size:8}},grid:{color:GRID}},
-      y:{ticks:{color:TEXT,callback:v=>(v/1000).toFixed(0)+'k'},grid:{color:GRID}},
-      yc:{position:'right',ticks:{color:'#8b5cf6',callback:v=>v.toFixed(2)+'%'},grid:{display:false}}
-    },
-    plugins:{
-      legend:{position:'top',labels:{color:TEXT,boxWidth:10,padding:8}},
-      tooltip:{callbacks:{label:ctx=>{
-        if(ctx.dataset.yAxisID==='yc') return ' Conv: '+ctx.parsed.y.toFixed(2)+'%';
-        return ' Sesiones: '+(ctx.parsed.y/1000).toFixed(1)+'k';
-      }}}
-    }
-  },
-  plugins:[datalabelsPlugin]
-});
+const DS = (label, data, color) => ({label, data, borderColor:color, backgroundColor:color+'33',
+  fill:true, tension:.4, pointBackgroundColor:color, pointRadius:4});
 
-// Top 20 chart
-new Chart(document.getElementById('c-top20'),{
-  type:'bar',
-  data:{labels:top20Names,datasets:[{
-    data:top20Units,backgroundColor:'#6366f1',borderRadius:3,
-    fmtFn:v=>v+' un.'
-  }]},
-  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-    layout:{padding:{right:70}},
+let salesChart = new Chart(document.getElementById('salesChart'), cfg(LABELS,[DS('Total Recibido',TOTAL,'#6366f1')]));
+new Chart(document.getElementById('ordersChart'), cfg(LABELS,[DS('Pedidos',ORDERS,'#10b981')]));
+new Chart(document.getElementById('sessChart'),{
+  type:'line', data:{labels:LABELS,
+    datasets:[DS('Sesiones',SESSIONS,'#6366f1'), {label:'Conversión %',data:CONV,borderColor:'#f59e0b',backgroundColor:'#f59e0b33',fill:false,tension:.4,yAxisID:'y2',pointRadius:4,pointBackgroundColor:'#f59e0b'}]},
+  options:{ responsive:true, maintainAspectRatio:true,
+    plugins:{ legend:{ labels:{ color:'#94a3b8', boxWidth:12 } } },
     scales:{
-      x:{ticks:{color:TEXT},grid:{color:GRID},title:{display:true,text:'Unidades vendidas (pedidos)',color:TEXT}},
-      y:{ticks:{color:TEXT,font:{size:8.5}},grid:{display:false}}
-    },
-    plugins:{
-      legend:{display:false},
-      tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.x+' un. · $'+top20M[ctx.dataIndex]+'M'}}
+      x:{ ticks:{ color:'#94a3b8' }, grid:{ color:'#1e293b' } },
+      y:{ ticks:{ color:'#94a3b8' }, grid:{ color:'#334155' } },
+      y2:{ position:'right', ticks:{ color:'#f59e0b' }, grid:{ drawOnChartArea:false } }
     }
-  },
-  plugins:[{
-    id:'top20Labels',
-    afterDatasetsDraw(chart){
-      const ctx=chart.ctx;
-      chart.data.datasets.forEach((ds,di)=>{
-        chart.getDatasetMeta(di).data.forEach((el,i)=>{
-          const v=ds.data[i];
-          ctx.save();
-          ctx.font='600 9px -apple-system,sans-serif';
-          ctx.fillStyle='#6366f1';
-          ctx.textAlign='left';
-          ctx.fillText(v+' un.',el.x+6,el.y+3.5);
-          ctx.fillStyle='#94a3b8';
-          ctx.fillText('$'+top20M[i]+'M',el.x+6+48,el.y+3.5);
-          ctx.restore();
-        });
-      });
-    }
-  }]
-});
-
-// Navigation
-let currentPage = 0;
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn,.nav-section').forEach(b=>b.classList.remove('active'));
-  if(id==='comp'){
-    document.getElementById('page-comp').classList.add('active');
-    document.getElementById('btn-comp').classList.add('active');
-  } else if(id==='top20'){
-    document.getElementById('page-top20').classList.add('active');
-    document.getElementById('btn-top20').classList.add('active');
-  } else {
-    document.getElementById('page-'+id).classList.add('active');
-    document.getElementById('btn-'+id).classList.add('active');
-    currentPage=id;
   }
-  window.scrollTo(0,0);
+});
+
+function showSalesChart(type) {
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  const map = {total:[TOTAL,'#6366f1','Total Recibido'], gross:[GROSS,'#10b981','Ventas Brutas'], net:[NET,'#8b5cf6','Ventas Netas']};
+  const [d,c,l] = map[type];
+  salesChart.data.datasets = [DS(l,d,c)];
+  salesChart.update();
 }
-showPage(11); // Mostrar Mayo 2026 por defecto
+
+// Top15 tabs
+const tabsEl = document.getElementById('monthTabs');
+LABELS.forEach((lbl, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab' + (i===LABELS.length-1?' active':'');
+  btn.textContent = lbl;
+  btn.onclick = () => { document.querySelectorAll('#monthTabs .tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); renderTop15(i); };
+  tabsEl.appendChild(btn);
+});
+
+function renderTop15(idx) {
+  const tbody = document.getElementById('top15Body');
+  tbody.innerHTML = '';
+  TOP15[idx].forEach(([name,ords,gs],i) => {
+    tbody.innerHTML += `<tr><td>${i+1}</td><td>${name}</td><td>$${(gs/1e6).toFixed(2)}M</td><td>${ords}</td></tr>`;
+  });
+}
+renderTop15(LABELS.length-1);
 </script>
 </body>
 </html>
