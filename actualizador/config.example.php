@@ -1,15 +1,15 @@
 <?php
 // ================================================================
-// CONFIGURACIÓN - Edita estos valores y guarda el archivo
+// PLANTILLA DE CONFIGURACIÓN
+// Copia este archivo como config.php y completa los valores.
+// El config.php real NUNCA se sube a GitHub (repo público).
 // ================================================================
 
 // Tu dominio de Shopify (sin https://, sin barra al final)
-define('SHOPIFY_DOMAIN', 'uno-a-droguerias.myshopify.com');
+define('SHOPIFY_DOMAIN', 'tu-tienda.myshopify.com');
 
-// Credenciales de la app "Actualizador de promos"
-// Las encuentras en: Shopify Dev Dashboard → tu app → Configuración
-// (sección de credenciales: Client ID y Client Secret)
-define('SHOPIFY_CLIENT_ID', '90f1d5db020a3b179e86c9a69d71dc6e');
+// Credenciales de la app (Shopify Dev Dashboard → tu app → Configuración)
+define('SHOPIFY_CLIENT_ID', 'PEGA_AQUI_EL_CLIENT_ID');
 define('SHOPIFY_CLIENT_SECRET', 'PEGA_AQUI_EL_CLIENT_SECRET');
 
 // Contraseña para entrar al actualizador (pon algo seguro)
