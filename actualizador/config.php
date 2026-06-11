@@ -5,7 +5,7 @@
 
 // Tu dominio de Shopify (sin https://, sin barra al final)
 // Ejemplo: mi-drogueria.myshopify.com
-define('SHOPIFY_DOMAIN', 'tu-tienda.myshopify.com');
+define('SHOPIFY_DOMAIN', 'uno-a-droguerias.myshopify.com');
 
 // Admin API Access Token
 // Cómo obtenerlo: Shopify Admin → Configuración → Apps → Desarrollar apps
