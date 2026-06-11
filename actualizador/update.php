@@ -26,6 +26,52 @@ if (!isset($input['password']) || $input['password'] !== ACCESS_PASSWORD) {
     exit;
 }
 
+// ── Access token (client credentials grant, expira cada 24 h) ──
+function getAccessToken() {
+    // Reusar token cacheado si aún es válido (margen de 5 min)
+    if (file_exists(TOKEN_CACHE_FILE)) {
+        $cache = json_decode(file_get_contents(TOKEN_CACHE_FILE), true);
+        if ($cache && isset($cache['token'], $cache['expires_at'])
+            && time() < $cache['expires_at'] - 300) {
+            return $cache['token'];
+        }
+    }
+
+    // Pedir token nuevo a Shopify
+    $ch = curl_init('https://' . SHOPIFY_DOMAIN . '/admin/oauth/access_token');
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => http_build_query([
+            'grant_type'    => 'client_credentials',
+            'client_id'     => SHOPIFY_CLIENT_ID,
+            'client_secret' => SHOPIFY_CLIENT_SECRET,
+        ]),
+        CURLOPT_HTTPHEADER     => ['Content-Type: application/x-www-form-urlencoded'],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_TIMEOUT        => 20,
+    ]);
+    $body = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($code !== 200) {
+        throw new Exception('No se pudo obtener token de Shopify (HTTP ' . $code . '). Revisa Client ID/Secret.');
+    }
+
+    $data = json_decode($body, true);
+    if (empty($data['access_token'])) {
+        throw new Exception('Respuesta de token inválida de Shopify');
+    }
+
+    file_put_contents(TOKEN_CACHE_FILE, json_encode([
+        'token'      => $data['access_token'],
+        'expires_at' => time() + ($data['expires_in'] ?? 86399),
+    ]));
+
+    return $data['access_token'];
+}
+
 // ── GraphQL helper ─────────────────────────────────────────────
 function shopifyGQL($query, $vars = []) {
     $payload = json_encode(['query' => $query, 'variables' => $vars]);
@@ -35,7 +81,7 @@ function shopifyGQL($query, $vars = []) {
         CURLOPT_POSTFIELDS     => $payload,
         CURLOPT_HTTPHEADER     => [
             'Content-Type: application/json',
-            'X-Shopify-Access-Token: ' . SHOPIFY_TOKEN,
+            'X-Shopify-Access-Token: ' . getAccessToken(),
         ],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => true,
