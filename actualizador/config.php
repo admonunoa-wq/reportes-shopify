@@ -9,7 +9,7 @@ define('SHOPIFY_DOMAIN', 'uno-a-droguerias.myshopify.com');
 // Credenciales de la app "Actualizador de promos"
 // Las encuentras en: Shopify Dev Dashboard → tu app → Configuración
 // (sección de credenciales: Client ID y Client Secret)
-define('SHOPIFY_CLIENT_ID', 'PEGA_AQUI_EL_CLIENT_ID');
+define('SHOPIFY_CLIENT_ID', '90f1d5db020a3b179e86c9a69d71dc6e');
 define('SHOPIFY_CLIENT_SECRET', 'PEGA_AQUI_EL_CLIENT_SECRET');
 
 // Contraseña para entrar al actualizador (pon algo seguro)
