@@ -27,11 +27,14 @@ function getAccessToken() {
     ]);
     $body = curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $err  = curl_error($ch);
     curl_close($ch);
 
-    if ($code !== 200) throw new Exception('Token Shopify falló (HTTP ' . $code . ')');
+    if ($err)          throw new Exception('cURL error obteniendo token: ' . $err);
+    if ($code !== 200) throw new Exception('Token Shopify falló (HTTP ' . $code . '): ' . substr($body, 0, 200));
+
     $data = json_decode($body, true);
-    if (empty($data['access_token'])) throw new Exception('Respuesta de token inválida');
+    if (empty($data['access_token'])) throw new Exception('Respuesta de token inválida: ' . substr($body, 0, 200));
 
     file_put_contents(TOKEN_CACHE_FILE, json_encode([
         'token'      => $data['access_token'],
@@ -53,7 +56,7 @@ function shopifyGQL($query, $vars = []) {
         ],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => true,
-        CURLOPT_TIMEOUT        => 20,
+        CURLOPT_TIMEOUT        => 25,
     ]);
     $body = curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -61,7 +64,7 @@ function shopifyGQL($query, $vars = []) {
     curl_close($ch);
 
     if ($err)          throw new Exception('cURL: ' . $err);
-    if ($code !== 200) throw new Exception('HTTP ' . $code);
+    if ($code !== 200) throw new Exception('Shopify HTTP ' . $code);
 
     $data = json_decode($body, true);
     if (!empty($data['errors'])) throw new Exception($data['errors'][0]['message']);
@@ -71,7 +74,8 @@ function shopifyGQL($query, $vars = []) {
 // ── JSON storage con lock ──────────────────────────────────────
 function loadJson($file, $default = []) {
     if (!file_exists($file)) return $default;
-    $data = json_decode(file_get_contents($file), true);
+    $raw  = file_get_contents($file);
+    $data = $raw ? json_decode($raw, true) : null;
     return is_array($data) ? $data : $default;
 }
 
@@ -88,9 +92,9 @@ function addHistory($entry) {
 
 // ── Shopify: buscar variante por SKU ───────────────────────────
 function findVariantBySku($sku) {
-    $res = shopifyGQL('
+    $res   = shopifyGQL('
     query($q: String!) {
-        productVariants(first: 5, query: $q) {
+        productVariants(first: 10, query: $q) {
             edges {
                 node {
                     id sku price compareAtPrice
@@ -100,7 +104,8 @@ function findVariantBySku($sku) {
         }
     }', ['q' => 'sku:' . $sku]);
 
-    foreach ($res['data']['productVariants']['edges'] as $e) {
+    $edges = $res['data']['productVariants']['edges'] ?? [];
+    foreach ($edges as $e) {
         if (strtolower(trim($e['node']['sku'])) === strtolower(trim($sku))) {
             return $e['node'];
         }
@@ -110,8 +115,10 @@ function findVariantBySku($sku) {
 
 // ── Shopify: fijar precio y precio tachado ─────────────────────
 function setPrices($variantId, $price, $compareAt) {
-    $input = ['id' => $variantId, 'price' => number_format((float)$price, 2, '.', '')];
-    // compareAtPrice null lo borra; un valor lo fija como precio tachado
+    $input = [
+        'id'    => $variantId,
+        'price' => number_format((float)$price, 2, '.', ''),
+    ];
     $input['compareAtPrice'] = ($compareAt === null || $compareAt === '')
         ? null
         : number_format((float)$compareAt, 2, '.', '');
@@ -124,26 +131,26 @@ function setPrices($variantId, $price, $compareAt) {
         }
     }', ['input' => $input]);
 
-    $ue = $res['data']['productVariantUpdate']['userErrors'];
+    $ue = $res['data']['productVariantUpdate']['userErrors'] ?? [];
     if (!empty($ue)) throw new Exception($ue[0]['message']);
     return $res['data']['productVariantUpdate']['productVariant'];
 }
 
 // ── Motor: aplicar y revertir promos vencidas ──────────────────
-// Lo llaman el cron (cron.php) y el botón "Ejecutar ahora" (api.php)
 function processDue() {
     $schedule = loadJson(SCHEDULE_FILE);
-    $now      = time();
+    $today    = date('Y-m-d');
     $actions  = [];
     $changed  = false;
 
     foreach ($schedule as &$p) {
-        $startTs = strtotime($p['start'] . ' 00:00:00');
-        $endTs   = strtotime($p['end']   . ' 23:59:59');
+        $start = $p['start'] ?? '';
+        $end   = $p['end']   ?? '';
+        if (!$start || !$end) continue;
 
         try {
-            // Activar promo pendiente que ya inició y no ha vencido
-            if ($p['status'] === 'programada' && $now >= $startTs && $now <= $endTs) {
+            // Activar promo que ya inició
+            if ($p['status'] === 'programada' && $today >= $start && $today <= $end) {
                 $v = findVariantBySku($p['sku']);
                 if (!$v) {
                     $p['status'] = 'error';
@@ -151,42 +158,53 @@ function processDue() {
                 } else {
                     $orig    = (float)$v['price'];
                     $promo   = (float)$p['promoPrice'];
-                    $tachado = $orig > $promo ? $orig : null;
+                    $tachado = ($orig > $promo) ? $orig : null;
 
                     setPrices($v['id'], $promo, $tachado);
 
                     $p['variantId']         = $v['id'];
-                    $p['product']           = $v['product']['title'];
+                    $p['product']           = $v['product']['title'] ?? '';
                     $p['originalPrice']     = $v['price'];
                     $p['originalCompareAt'] = $v['compareAtPrice'];
                     $p['status']            = 'activa';
                     $p['msg']               = 'Aplicada ' . date('Y-m-d H:i');
-                    $actions[] = ['accion' => 'aplicada', 'sku' => $p['sku'],
-                                  'producto' => $p['product'], 'promo' => $promo, 'antes' => $orig];
+                    $actions[] = [
+                        'accion'   => 'aplicada',
+                        'sku'      => $p['sku'],
+                        'producto' => $p['product'],
+                        'promo'    => $promo,
+                        'antes'    => $orig,
+                    ];
                 }
                 $changed = true;
             }
 
-            // Promo programada que venció sin llegar a aplicarse
-            elseif ($p['status'] === 'programada' && $now > $endTs) {
+            // Promo programada que venció sin activarse
+            elseif ($p['status'] === 'programada' && $today > $end) {
                 $p['status'] = 'vencida';
                 $p['msg']    = 'Venció sin aplicarse';
-                $changed = true;
+                $changed     = true;
             }
 
             // Revertir promo activa que ya terminó
-            elseif ($p['status'] === 'activa' && $now > $endTs) {
-                setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null);
+            elseif ($p['status'] === 'activa' && $today > $end) {
+                if (!empty($p['variantId'])) {
+                    setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null);
+                }
                 $p['status'] = 'finalizada';
                 $p['msg']    = 'Precio restaurado ' . date('Y-m-d H:i');
-                $actions[]   = ['accion' => 'restaurada', 'sku' => $p['sku'],
-                                'producto' => $p['product'] ?? '', 'precio' => $p['originalPrice']];
+                $actions[]   = [
+                    'accion'   => 'restaurada',
+                    'sku'      => $p['sku'],
+                    'producto' => $p['product'] ?? '',
+                    'precio'   => $p['originalPrice'],
+                ];
                 $changed = true;
             }
         } catch (Exception $e) {
             $p['status'] = 'error';
             $p['msg']    = $e->getMessage();
-            $changed = true;
+            $changed     = true;
         }
     }
     unset($p);
