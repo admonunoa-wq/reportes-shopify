@@ -1,0 +1,7 @@
+# Credenciales - nunca subir a GitHub (el repo es público)
+actualizador/config.php
+actualizador/token_cache.json
+promos/config.php
+promos/token_cache.json
+promos/schedule.json
+promos/history.json

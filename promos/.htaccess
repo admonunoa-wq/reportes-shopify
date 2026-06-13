@@ -1,0 +1,14 @@
+# Bloquea el acceso directo a archivos sensibles desde el navegador
+DirectoryIndex index.php
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files "lib.php">
+    Order allow,deny
+    Deny from all
+</Files>
+<FilesMatch "\.(json)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
