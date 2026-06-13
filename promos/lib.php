@@ -156,14 +156,20 @@ function processDue() {
                     $p['status'] = 'error';
                     $p['msg']    = 'SKU no encontrado en Shopify';
                 } else {
-                    $orig    = (float)$v['price'];
-                    $promo   = (float)$p['promoPrice'];
-                    $tachado = ($orig > $promo) ? $orig : null;
+                    $promo  = (float)$p['promoPrice'];
+                    // "Precio antes" del archivo: precio tachado durante la promo.
+                    // Si no vino en el archivo, se usa el precio actual de Shopify.
+                    $before = !empty($p['beforePrice'])
+                        ? (float)$p['beforePrice']
+                        : (float)$v['price'];
+                    $tachado = ($before > $promo) ? $before : null;
 
                     setPrices($v['id'], $promo, $tachado);
 
                     $p['variantId']         = $v['id'];
-                    $p['product']           = $v['product']['title'] ?? '';
+                    $p['product']           = $p['product'] ?? $v['product']['title'] ?? '';
+                    if (empty($p['product'])) $p['product'] = $v['product']['title'] ?? '';
+                    // Estado real de Shopify para poder restaurar sin riesgo.
                     $p['originalPrice']     = $v['price'];
                     $p['originalCompareAt'] = $v['compareAtPrice'];
                     $p['status']            = 'activa';
@@ -173,7 +179,7 @@ function processDue() {
                         'sku'      => $p['sku'],
                         'producto' => $p['product'],
                         'promo'    => $promo,
-                        'antes'    => $orig,
+                        'antes'    => $before,
                     ];
                 }
                 $changed = true;

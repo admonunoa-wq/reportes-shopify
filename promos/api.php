@@ -45,10 +45,12 @@ try {
 
         foreach ($rows as $r) {
             if (!is_array($r)) { $invalid++; continue; }
-            $sku   = trim($r['sku'] ?? '');
-            $price = (float)($r['promoPrice'] ?? 0);
-            $start = trim($r['start'] ?? '');
-            $end   = trim($r['end']   ?? '');
+            $sku     = trim($r['sku'] ?? '');
+            $product = trim($r['product'] ?? '');
+            $before  = (float)($r['beforePrice'] ?? 0);
+            $price   = (float)($r['promoPrice'] ?? 0);
+            $start   = trim($r['start'] ?? '');
+            $end     = trim($r['end']   ?? '');
 
             if ($sku === '' || $price <= 0
                 || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $start)
@@ -59,14 +61,16 @@ try {
             }
 
             $schedule[] = [
-                'id'         => uniqid('p', true),
-                'sku'        => $sku,
-                'promoPrice' => $price,
-                'start'      => $start,
-                'end'        => $end,
-                'status'     => 'programada',
-                'msg'        => '',
-                'creada'     => date('Y-m-d H:i'),
+                'id'          => uniqid('p', true),
+                'sku'         => $sku,
+                'product'     => $product,
+                'beforePrice' => $before,
+                'promoPrice'  => $price,
+                'start'       => $start,
+                'end'         => $end,
+                'status'      => 'programada',
+                'msg'         => '',
+                'creada'      => date('Y-m-d H:i'),
             ];
             $added++;
         }
