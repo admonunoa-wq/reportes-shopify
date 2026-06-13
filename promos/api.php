@@ -98,8 +98,8 @@ try {
         foreach ($schedule as &$p) {
             if ($p['id'] !== $id) continue;
             $found = true;
-            if ($p['status'] === 'activa' && !empty($p['variantId'])) {
-                setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null);
+            if ($p['status'] === 'activa' && !empty($p['variantId']) && !empty($p['productId'])) {
+                setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null, $p['productId']);
                 addHistory([
                     'accion'   => 'cancelada+restaurada',
                     'sku'      => $p['sku'],

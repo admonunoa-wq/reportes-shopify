@@ -98,7 +98,7 @@ function findVariantBySku($sku) {
             edges {
                 node {
                     id sku price compareAtPrice
-                    product { title }
+                    product { id title }
                 }
             }
         }
@@ -114,26 +114,36 @@ function findVariantBySku($sku) {
 }
 
 // ── Shopify: fijar precio y precio tachado ─────────────────────
-function setPrices($variantId, $price, $compareAt) {
-    $input = [
+// Usa productVariantsBulkUpdate (API 2025-01+, reemplaza productVariantUpdate)
+function setPrices($variantId, $price, $compareAt, $productId = null) {
+    $variantInput = [
         'id'    => $variantId,
         'price' => number_format((float)$price, 2, '.', ''),
+        'compareAtPrice' => ($compareAt === null || $compareAt === '')
+            ? null
+            : number_format((float)$compareAt, 2, '.', ''),
     ];
-    $input['compareAtPrice'] = ($compareAt === null || $compareAt === '')
-        ? null
-        : number_format((float)$compareAt, 2, '.', '');
+
+    // productVariantsBulkUpdate requiere el ID del producto padre
+    if (!$productId) {
+        throw new Exception('Se necesita el ID del producto para actualizar el precio (API 2025-01)');
+    }
 
     $res = shopifyGQL('
-    mutation($input: ProductVariantInput!) {
-        productVariantUpdate(input: $input) {
-            productVariant { id price compareAtPrice }
+    mutation($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+        productVariantsBulkUpdate(productId: $productId, variants: $variants) {
+            productVariants { id price compareAtPrice }
             userErrors { field message }
         }
-    }', ['input' => $input]);
+    }', [
+        'productId' => $productId,
+        'variants'  => [$variantInput],
+    ]);
 
-    $ue = $res['data']['productVariantUpdate']['userErrors'] ?? [];
+    $ue = $res['data']['productVariantsBulkUpdate']['userErrors'] ?? [];
     if (!empty($ue)) throw new Exception($ue[0]['message']);
-    return $res['data']['productVariantUpdate']['productVariant'];
+    $variants = $res['data']['productVariantsBulkUpdate']['productVariants'] ?? [];
+    return $variants[0] ?? null;
 }
 
 // ── Motor: aplicar y revertir promos vencidas ──────────────────
@@ -164,9 +174,10 @@ function processDue() {
                         : (float)$v['price'];
                     $tachado = ($before > $promo) ? $before : null;
 
-                    setPrices($v['id'], $promo, $tachado);
+                    setPrices($v['id'], $promo, $tachado, $v['product']['id']);
 
                     $p['variantId']         = $v['id'];
+                    $p['productId']         = $v['product']['id'];
                     $p['product']           = $p['product'] ?? $v['product']['title'] ?? '';
                     if (empty($p['product'])) $p['product'] = $v['product']['title'] ?? '';
                     // Estado real de Shopify para poder restaurar sin riesgo.
@@ -194,8 +205,8 @@ function processDue() {
 
             // Revertir promo activa que ya terminó
             elseif ($p['status'] === 'activa' && $today > $end) {
-                if (!empty($p['variantId'])) {
-                    setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null);
+                if (!empty($p['variantId']) && !empty($p['productId'])) {
+                    setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null, $p['productId']);
                 }
                 $p['status'] = 'finalizada';
                 $p['msg']    = 'Precio restaurado ' . date('Y-m-d H:i');
