@@ -168,9 +168,9 @@ function refresh() {
 // ── Detección de columnas ────────────────────────────────────────
 const COL_RULES = {
   sku:     ['codigo eco', 'código eco', 'cod eco', 'sku', 'referencia', 'codigo', 'código', 'ref', 'cod', 'eco'],
-  product: ['nombre', 'producto', 'descripcion', 'descripción', 'articulo', 'artículo', 'item'],
-  before:  ['antes', 'precio antes', 'actual', 'precio actual', 'original', 'precio original', 'normal', 'pleno'],
-  after:   ['despues', 'después', 'precio despues', 'precio después', 'promo', 'precio promo', 'oferta', 'rebajado', 'descuento', 'nuevo'],
+  product: ['nombre', 'producto', 'descripcion', 'descripción', 'articulo', 'artículo', 'item', 'productos'],
+  before:  ['pvp antes', 'p. antes', 'antes', 'precio antes', 'actual', 'precio actual', 'original', 'precio original', 'normal', 'pleno'],
+  after:   ['pvp desp', 'pvp despues', 'pvp después', 'p. desp', 'desp', 'precio despues', 'precio después', 'despues', 'después', 'promo', 'precio promo', 'oferta'],
   start:   ['inicio', 'fecha inicio', 'desde', 'start'],
   end:     ['fin', 'fecha fin', 'hasta', 'end'],
 };
