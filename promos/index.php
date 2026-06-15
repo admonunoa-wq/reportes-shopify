@@ -167,7 +167,7 @@ function refresh() {
 
 // ── Detección de columnas ────────────────────────────────────────
 const COL_RULES = {
-  sku:     ['sku', 'referencia', 'codigo', 'código', 'ref', 'cod'],
+  sku:     ['codigo eco', 'código eco', 'cod eco', 'sku', 'referencia', 'codigo', 'código', 'ref', 'cod', 'eco'],
   product: ['nombre', 'producto', 'descripcion', 'descripción', 'articulo', 'artículo', 'item'],
   before:  ['antes', 'precio antes', 'actual', 'precio actual', 'original', 'precio original', 'normal', 'pleno'],
   after:   ['despues', 'después', 'precio despues', 'precio después', 'promo', 'precio promo', 'oferta', 'rebajado', 'descuento', 'nuevo'],
@@ -411,12 +411,20 @@ function api(body) {
 }
 
 /**
- * Los precios no llevan decimales. Los puntos (y comas) son separadores
- * de miles, así que se eliminan todos: 120.000 → 120000, 1.234.567 → 1234567.
+ * Reglas fijas para precios colombianos / formato EcoDroguerías:
+ *   Punto  → separador de miles  (SIEMPRE, nunca decimal)
+ *   Coma   → separador decimal   (ej: 14,50 → 14.50)
+ *
+ *   120.000   → 120000
+ *   1.234.567 → 1234567
+ *   14,50     → 14.5
+ *   14.950,75 → 14950.75
  */
 function cleanNum(v) {
-  const s = String(v ?? '').replace(/[^0-9]/g, '');
-  const n = parseInt(s, 10);
+  let s = String(v ?? '').replace(/[^0-9.,]/g, ''); // quita símbolos ($, espacios, etc.)
+  s = s.replace(/\./g, '');      // elimina TODOS los puntos (son miles)
+  s = s.replace(',', '.');       // convierte coma decimal a punto
+  const n = parseFloat(s);
   return isNaN(n) ? 0 : n;
 }
 
