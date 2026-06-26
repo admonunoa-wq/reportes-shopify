@@ -203,6 +203,39 @@ function processDue() {
                 $changed     = true;
             }
 
+            // Re-aplicar promo ACTIVA que aún está en fechas pero cuyo
+            // precio fue cambiado en Shopify (p.ej. por el actualizador de PVP).
+            elseif ($p['status'] === 'activa' && $today >= $start && $today <= $end) {
+                $v = findVariantBySku($p['sku']);
+                if ($v) {
+                    $promo   = (float)$p['promoPrice'];
+                    $current = (float)$v['price'];
+                    // Solo actúa si el precio actual NO es el de promoción.
+                    if (abs($current - $promo) > 0.001) {
+                        // El nuevo precio real pasa a ser el "antes" (precio tachado)
+                        // y el valor al que se restaurará al terminar la promo.
+                        $before  = ($current > $promo) ? $current : (float)($p['beforePrice'] ?? 0);
+                        $tachado = ($before > $promo) ? $before : null;
+
+                        setPrices($v['id'], $promo, $tachado, $v['product']['id']);
+
+                        $p['variantId']         = $v['id'];
+                        $p['productId']         = $v['product']['id'];
+                        $p['originalPrice']     = $current;
+                        $p['originalCompareAt'] = $v['compareAtPrice'];
+                        $p['msg']               = 'Re-aplicada (el precio había cambiado) ' . date('Y-m-d H:i');
+                        $actions[] = [
+                            'accion'   => 're-aplicada',
+                            'sku'      => $p['sku'],
+                            'producto' => $p['product'] ?? '',
+                            'promo'    => $promo,
+                            'antes'    => $before,
+                        ];
+                        $changed = true;
+                    }
+                }
+            }
+
             // Revertir promo activa que ya terminó
             elseif ($p['status'] === 'activa' && $today > $end) {
                 if (!empty($p['variantId']) && !empty($p['productId'])) {

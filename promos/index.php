@@ -117,7 +117,7 @@
     <div class="promo-section">
       <h2>📅 Promociones</h2>
       <div class="actions-row">
-        <button class="btn-sec" id="runBtn" onclick="runNow()">▶ Ejecutar pendientes ahora</button>
+        <button class="btn-sec" id="runBtn" onclick="runNow()" title="Activa las promos que ya iniciaron, revierte las que terminaron y re-aplica el precio promo a los productos cuyo precio fue cambiado y siguen en promoción.">▶ Ejecutar y re-verificar precios</button>
         <button class="btn-sec" onclick="cleanList()">🧹 Limpiar terminadas</button>
         <span class="server-time" id="serverTime"></span>
       </div>
@@ -319,7 +319,7 @@ function runNow() {
       else         showMsg('ok', '✅ ' + n + ' acción(es) ejecutada(s).');
     })
     .catch(err => showMsg('err', 'Error: ' + err.message))
-    .finally(() => setBtn('runBtn', false, '▶ Ejecutar pendientes ahora'));
+    .finally(() => setBtn('runBtn', false, '▶ Ejecutar y re-verificar precios'));
 }
 
 // ── Render ───────────────────────────────────────────────────────
