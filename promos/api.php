@@ -100,6 +100,7 @@ try {
             $found = true;
             if ($p['status'] === 'activa' && !empty($p['variantId']) && !empty($p['productId'])) {
                 setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null, $p['productId']);
+                try { removeFromOfertas($p['productId']); $p['enOfertas'] = false; } catch (Exception $ce) {}
                 addHistory([
                     'accion'   => 'cancelada+restaurada',
                     'sku'      => $p['sku'],

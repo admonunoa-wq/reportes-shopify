@@ -2,6 +2,11 @@
 require_once __DIR__ . '/config.php';
 date_default_timezone_set('America/Bogota');
 
+// Colección "⚡︎ Ofertas Uno A ⚡︎" (manual). Se puede sobreescribir en config.php.
+if (!defined('OFERTAS_COLLECTION_ID')) {
+    define('OFERTAS_COLLECTION_ID', 'gid://shopify/Collection/180686913667');
+}
+
 // ── Access token (client credentials grant, expira cada 24 h) ──
 function getAccessToken() {
     if (file_exists(TOKEN_CACHE_FILE)) {
@@ -146,6 +151,36 @@ function setPrices($variantId, $price, $compareAt, $productId = null) {
     return $variants[0] ?? null;
 }
 
+// ── Shopify: colección de Ofertas (manual) ─────────────────────
+// Agrega el producto a la colección al iniciar la promo y lo quita al terminar.
+function addToOfertas($productId) {
+    if (!$productId || !OFERTAS_COLLECTION_ID) return;
+    $res = shopifyGQL('
+    mutation($id: ID!, $productIds: [ID!]!) {
+        collectionAddProductsV2(id: $id, productIds: $productIds) {
+            job { id }
+            userErrors { field message }
+        }
+    }', ['id' => OFERTAS_COLLECTION_ID, 'productIds' => [$productId]]);
+
+    $ue = $res['data']['collectionAddProductsV2']['userErrors'] ?? [];
+    if (!empty($ue)) throw new Exception('colección+: ' . $ue[0]['message']);
+}
+
+function removeFromOfertas($productId) {
+    if (!$productId || !OFERTAS_COLLECTION_ID) return;
+    $res = shopifyGQL('
+    mutation($id: ID!, $productIds: [ID!]!) {
+        collectionRemoveProducts(id: $id, productIds: $productIds) {
+            job { id }
+            userErrors { field message }
+        }
+    }', ['id' => OFERTAS_COLLECTION_ID, 'productIds' => [$productId]]);
+
+    $ue = $res['data']['collectionRemoveProducts']['userErrors'] ?? [];
+    if (!empty($ue)) throw new Exception('colección-: ' . $ue[0]['message']);
+}
+
 // ── Motor: aplicar y revertir promos vencidas ──────────────────
 function processDue() {
     $schedule = loadJson(SCHEDULE_FILE);
@@ -185,6 +220,9 @@ function processDue() {
                     $p['originalCompareAt'] = $v['compareAtPrice'];
                     $p['status']            = 'activa';
                     $p['msg']               = 'Aplicada ' . date('Y-m-d H:i');
+                    // Agregar a la colección de Ofertas (no rompe la promo si falla).
+                    try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
+                    catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
                     $actions[] = [
                         'accion'   => 'aplicada',
                         'sku'      => $p['sku'],
@@ -224,6 +262,9 @@ function processDue() {
                         $p['originalPrice']     = $current;
                         $p['originalCompareAt'] = $v['compareAtPrice'];
                         $p['msg']               = 'Re-aplicada (el precio había cambiado) ' . date('Y-m-d H:i');
+                        // Asegurar que siga en la colección de Ofertas.
+                        try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
+                        catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
                         $actions[] = [
                             'accion'   => 're-aplicada',
                             'sku'      => $p['sku'],
@@ -243,6 +284,11 @@ function processDue() {
                 }
                 $p['status'] = 'finalizada';
                 $p['msg']    = 'Precio restaurado ' . date('Y-m-d H:i');
+                // Quitar de la colección de Ofertas (no rompe el cierre si falla).
+                if (!empty($p['productId'])) {
+                    try { removeFromOfertas($p['productId']); $p['enOfertas'] = false; }
+                    catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
+                }
                 $actions[]   = [
                     'accion'   => 'restaurada',
                     'sku'      => $p['sku'],

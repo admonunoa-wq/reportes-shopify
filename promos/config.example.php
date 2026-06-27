@@ -16,6 +16,10 @@ define('ACCESS_PASSWORD', 'cambia-esta-password');
 // Llave secreta del cron (debe coincidir con la URL del cron en cPanel)
 define('CRON_KEY', 'genera-una-llave-aleatoria');
 
+// Colección de Ofertas (manual): los productos en promo entran aquí al
+// iniciar y salen al terminar. Opcional — si no se define, usa la de Uno A.
+define('OFERTAS_COLLECTION_ID', 'gid://shopify/Collection/180686913667');
+
 // Archivos de datos (no tocar)
 define('TOKEN_CACHE_FILE', __DIR__ . '/token_cache.json');
 define('SCHEDULE_FILE',    __DIR__ . '/schedule.json');
