@@ -25,10 +25,13 @@ $action = $input['action'] ?? '';
 try {
 
     if ($action === 'list') {
+        $hb = loadJson(CRON_HEARTBEAT_FILE, []);
         echo json_encode([
             'schedule' => loadJson(SCHEDULE_FILE),
             'history'  => array_slice(loadJson(HISTORY_FILE), 0, 60),
             'now'      => date('Y-m-d H:i'),
+            'nowTs'    => time(),
+            'cron'     => $hb,  // {last, ts, acciones, origen} o vacío si nunca corrió
         ]);
         exit;
     }

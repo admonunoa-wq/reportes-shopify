@@ -7,6 +7,11 @@ if (!defined('OFERTAS_COLLECTION_ID')) {
     define('OFERTAS_COLLECTION_ID', 'gid://shopify/Collection/180686913667');
 }
 
+// Archivo de "latido" del cron (registra la última ejecución automática).
+if (!defined('CRON_HEARTBEAT_FILE')) {
+    define('CRON_HEARTBEAT_FILE', __DIR__ . '/cron_last.json');
+}
+
 // ── Access token (client credentials grant, expira cada 24 h) ──
 function getAccessToken() {
     if (file_exists(TOKEN_CACHE_FILE)) {

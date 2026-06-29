@@ -51,6 +51,10 @@
     .warn-row td { color: #fcd34d; opacity: .8; }
     code { font-family: monospace; font-size: .8rem; background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 3px; }
     .server-time { font-size: .75rem; opacity: .4; margin-left: auto; }
+    .cron-status { font-size: .8rem; margin: 4px 0 14px; padding: 8px 12px; border-radius: 8px; display: none; }
+    .cron-status.ok   { display: block; background: rgba(163,230,53,.10); border: 1px solid rgba(163,230,53,.25); color: #a3e635; }
+    .cron-status.warn { display: block; background: rgba(251,191,36,.10); border: 1px solid rgba(251,191,36,.3); color: #fcd34d; }
+    .cron-status.err  { display: block; background: rgba(239,68,68,.10); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; }
     @media(max-width:600px){ .dates-row { flex-direction: column; } }
   </style>
 </head>
@@ -121,6 +125,7 @@
         <button class="btn-sec" onclick="cleanList()">🧹 Limpiar terminadas</button>
         <span class="server-time" id="serverTime"></span>
       </div>
+      <div id="cronStatus" class="cron-status"></div>
       <div class="tscroll">
         <table class="data-table">
           <thead>
@@ -161,8 +166,30 @@ function refresh() {
     if (!d.error) {
       render(d.schedule, d.history);
       if (d.now) el('serverTime').textContent = 'Servidor: ' + d.now + ' (Bogotá)';
+      renderCronStatus(d.cron, d.nowTs);
     }
   });
+}
+
+// ── Estado del cron (ejecución automática) ───────────────────────
+function renderCronStatus(cron, nowTs) {
+  const box = el('cronStatus');
+  if (!box) return;
+  if (!cron || !cron.ts) {
+    box.className = 'cron-status err';
+    box.textContent = '⚠ La ejecución automática (cron) nunca ha corrido. Las promos NO se aplicarán solas hasta configurar el Cron Job en cPanel.';
+    return;
+  }
+  const mins = nowTs ? Math.round((nowTs - cron.ts) / 60) : null;
+  if (mins !== null && mins <= 40) {
+    box.className = 'cron-status ok';
+    box.textContent = '✅ Automático activo · última ejecución: ' + cron.last + ' (hace ' + mins + ' min)';
+  } else {
+    box.className = 'cron-status warn';
+    box.textContent = '⚠ El automático no corre desde ' + cron.last
+      + (mins !== null ? ' (hace ' + mins + ' min)' : '')
+      + '. Revisa el Cron Job en cPanel.';
+  }
 }
 
 // ── Detección de columnas ────────────────────────────────────────

@@ -21,6 +21,14 @@ set_time_limit(300);
 
 try {
     $actions = processDue();
+    // Latido: deja constancia de la última ejecución automática.
+    @file_put_contents(CRON_HEARTBEAT_FILE, json_encode([
+        'last'     => date('Y-m-d H:i'),
+        'ts'       => time(),
+        'acciones' => count($actions),
+        'origen'   => $esCli ? 'cron' : 'http',
+    ]), LOCK_EX);
+
     $salida = [
         'ok'       => true,
         'hora'     => date('Y-m-d H:i'),
