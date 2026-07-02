@@ -12,6 +12,16 @@ if (!defined('CRON_HEARTBEAT_FILE')) {
     define('CRON_HEARTBEAT_FILE', __DIR__ . '/cron_last.json');
 }
 
+// Etiqueta que el proceso de las mañanas usa para enriquecer productos nuevos.
+if (!defined('ENRIQUECER_TAG')) {
+    define('ENRIQUECER_TAG', 'pendiente-enriquecer');
+}
+
+// Si un SKU de la promo no existe, ¿crear el producto automáticamente?
+if (!defined('CREAR_PRODUCTOS_FALTANTES')) {
+    define('CREAR_PRODUCTOS_FALTANTES', true);
+}
+
 // ── Access token (client credentials grant, expira cada 24 h) ──
 function getAccessToken() {
     if (file_exists(TOKEN_CACHE_FILE)) {
@@ -244,6 +254,54 @@ function cleanOfertasCollection() {
     return $removidos;
 }
 
+// ── Shopify: crear producto básico ya con promo aplicada ───────
+// SKU + nombre + precio promo + precio tachado + etiqueta de enriquecimiento.
+// Devuelve la variante con la misma forma que findVariantBySku().
+function crearProductoConPromo($sku, $nombre, $promo, $before) {
+    $variant = [
+        'optionValues'  => [['optionName' => 'Title', 'name' => 'Default Title']],
+        'price'         => number_format((float)$promo, 2, '.', ''),
+        'inventoryItem' => ['sku' => $sku, 'tracked' => false],
+    ];
+    if ((float)$before > (float)$promo) {
+        $variant['compareAtPrice'] = number_format((float)$before, 2, '.', '');
+    }
+
+    $input = [
+        'title'          => $nombre,
+        'status'         => 'ACTIVE',
+        'tags'           => [ENRIQUECER_TAG],
+        'productOptions' => [['name' => 'Title', 'values' => [['name' => 'Default Title']]]],
+        'variants'       => [$variant],
+    ];
+
+    $res = shopifyGQL('
+    mutation($input: ProductSetInput!) {
+        productSet(synchronous: true, input: $input) {
+            product {
+                id title
+                variants(first: 1) { edges { node { id sku price compareAtPrice } } }
+            }
+            userErrors { field message }
+        }
+    }', ['input' => $input]);
+
+    $ue = $res['data']['productSet']['userErrors'] ?? [];
+    if (!empty($ue)) throw new Exception($ue[0]['message']);
+
+    $prod = $res['data']['productSet']['product'] ?? null;
+    if (!$prod) throw new Exception('productSet no devolvió producto');
+    $node = $prod['variants']['edges'][0]['node'] ?? null;
+
+    return [
+        'id'             => $node['id'] ?? null,
+        'sku'            => $node['sku'] ?? $sku,
+        'price'          => $node['price'] ?? $promo,
+        'compareAtPrice' => $node['compareAtPrice'] ?? null,
+        'product'        => ['id' => $prod['id'], 'title' => $prod['title']],
+    ];
+}
+
 // ── Motor: aplicar y revertir promos vencidas ──────────────────
 function processDue() {
     $schedule = loadJson(SCHEDULE_FILE);
@@ -259,37 +317,59 @@ function processDue() {
         try {
             // Activar promo que ya inició
             if ($p['status'] === 'programada' && $today >= $start && $today <= $end) {
-                $v = findVariantBySku($p['sku']);
-                if (!$v) {
+                $promo      = (float)$p['promoPrice'];
+                $beforeFile = (float)($p['beforePrice'] ?? 0);
+                $v          = findVariantBySku($p['sku']);
+                $creado     = false;
+
+                // Si no existe el SKU, crear el producto básico ya con la promo.
+                if (!$v && CREAR_PRODUCTOS_FALTANTES) {
+                    $nombre = trim($p['product'] ?? '');
+                    if ($nombre === '') {
+                        $p['status'] = 'error';
+                        $p['msg']    = 'SKU no encontrado y sin nombre para crear el producto';
+                    } else {
+                        $v = crearProductoConPromo($p['sku'], $nombre, $promo, $beforeFile);
+                        $creado = true;
+                        addHistory(['accion' => 'producto creado', 'sku' => $p['sku'], 'producto' => $nombre]);
+                    }
+                }
+
+                if (!$v && $p['status'] !== 'error') {
                     $p['status'] = 'error';
                     $p['msg']    = 'SKU no encontrado en Shopify';
-                } else {
-                    $promo  = (float)$p['promoPrice'];
-                    // "Precio antes" del archivo: precio tachado durante la promo.
-                    // Si no vino en el archivo, se usa el precio actual de Shopify.
-                    $before = !empty($p['beforePrice'])
-                        ? (float)$p['beforePrice']
-                        : (float)$v['price'];
+                }
+
+                if ($v) {
+                    // "Antes" = precio del archivo, o el precio actual de Shopify.
+                    $before  = $beforeFile > 0 ? $beforeFile : (float)$v['price'];
                     $tachado = ($before > $promo) ? $before : null;
 
-                    setPrices($v['id'], $promo, $tachado, $v['product']['id']);
+                    if ($creado) {
+                        // Ya se creó con precio promo + tachado; no re-escribir.
+                        $p['originalPrice']     = $before;   // al terminar, vuelve al PVP antes
+                        $p['originalCompareAt'] = null;
+                        $p['msg']               = 'Producto creado y promo aplicada ' . date('Y-m-d H:i');
+                    } else {
+                        setPrices($v['id'], $promo, $tachado, $v['product']['id']);
+                        $p['originalPrice']     = $v['price'];        // estado real previo
+                        $p['originalCompareAt'] = $v['compareAtPrice'];
+                        $p['msg']               = 'Aplicada ' . date('Y-m-d H:i');
+                    }
 
-                    $p['variantId']         = $v['id'];
-                    $p['productId']         = $v['product']['id'];
-                    $p['product']           = $p['product'] ?? $v['product']['title'] ?? '';
+                    $p['variantId'] = $v['id'];
+                    $p['productId'] = $v['product']['id'];
                     if (empty($p['product'])) $p['product'] = $v['product']['title'] ?? '';
-                    // Estado real de Shopify para poder restaurar sin riesgo.
-                    $p['originalPrice']     = $v['price'];
-                    $p['originalCompareAt'] = $v['compareAtPrice'];
-                    $p['status']            = 'activa';
-                    $p['msg']               = 'Aplicada ' . date('Y-m-d H:i');
+                    $p['status'] = 'activa';
+
                     // Agregar a Ofertas solo si hay precio tachado (descuento real).
                     if ($tachado !== null) {
                         try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
                         catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
                     }
+
                     $actions[] = [
-                        'accion'   => 'aplicada',
+                        'accion'   => $creado ? 'creada+aplicada' : 'aplicada',
                         'sku'      => $p['sku'],
                         'producto' => $p['product'],
                         'promo'    => $promo,

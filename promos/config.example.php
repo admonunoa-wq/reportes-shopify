@@ -20,6 +20,12 @@ define('CRON_KEY', 'genera-una-llave-aleatoria');
 // iniciar y salen al terminar. Opcional — si no se define, usa la de Uno A.
 define('OFERTAS_COLLECTION_ID', 'gid://shopify/Collection/180686913667');
 
+// Si un SKU de la promo no existe, crear el producto básico automáticamente
+// (SKU + nombre + precio promo + tachado) con esta etiqueta para que el
+// proceso de las mañanas lo enriquezca. Pon false para desactivar la creación.
+define('ENRIQUECER_TAG', 'pendiente-enriquecer');
+define('CREAR_PRODUCTOS_FALTANTES', true);
+
 // Archivos de datos (no tocar)
 define('TOKEN_CACHE_FILE', __DIR__ . '/token_cache.json');
 define('SCHEDULE_FILE',    __DIR__ . '/schedule.json');
