@@ -186,6 +186,64 @@ function removeFromOfertas($productId) {
     if (!empty($ue)) throw new Exception('colección-: ' . $ue[0]['message']);
 }
 
+// ── Barrido: sacar de Ofertas los productos sin precio tachado ──
+// Mantiene la colección limpia: solo quedan productos con compareAtPrice > price.
+function cleanOfertasCollection() {
+    if (!OFERTAS_COLLECTION_ID) return [];
+
+    $removidos = [];
+    $idsQuitar = [];
+    $cursor    = null;
+    $pagina    = 0;
+
+    do {
+        $res = shopifyGQL('
+        query($id: ID!, $cursor: String) {
+            collection(id: $id) {
+                products(first: 50, after: $cursor) {
+                    pageInfo { hasNextPage endCursor }
+                    edges { node {
+                        id title
+                        variants(first: 20) { edges { node { price compareAtPrice } } }
+                    } }
+                }
+            }
+        }', ['id' => OFERTAS_COLLECTION_ID, 'cursor' => $cursor]);
+
+        $conn = $res['data']['collection']['products'] ?? null;
+        if (!$conn) break;
+
+        foreach ($conn['edges'] as $e) {
+            $node    = $e['node'];
+            $tachado = false;
+            foreach (($node['variants']['edges'] ?? []) as $ve) {
+                $price = (float)($ve['node']['price'] ?? 0);
+                $cmp   = $ve['node']['compareAtPrice'];
+                if ($cmp !== null && $cmp !== '' && (float)$cmp > $price) { $tachado = true; break; }
+            }
+            if (!$tachado) {
+                $idsQuitar[]  = $node['id'];
+                $removidos[]  = $node['title'];
+            }
+        }
+
+        $cursor = !empty($conn['pageInfo']['hasNextPage']) ? $conn['pageInfo']['endCursor'] : null;
+        $pagina++;
+    } while ($cursor && $pagina < 40);
+
+    // Quitar en lotes de 50
+    foreach (array_chunk($idsQuitar, 50) as $lote) {
+        shopifyGQL('
+        mutation($id: ID!, $productIds: [ID!]!) {
+            collectionRemoveProducts(id: $id, productIds: $productIds) {
+                job { id } userErrors { field message }
+            }
+        }', ['id' => OFERTAS_COLLECTION_ID, 'productIds' => $lote]);
+    }
+
+    return $removidos;
+}
+
 // ── Motor: aplicar y revertir promos vencidas ──────────────────
 function processDue() {
     $schedule = loadJson(SCHEDULE_FILE);
@@ -225,9 +283,11 @@ function processDue() {
                     $p['originalCompareAt'] = $v['compareAtPrice'];
                     $p['status']            = 'activa';
                     $p['msg']               = 'Aplicada ' . date('Y-m-d H:i');
-                    // Agregar a la colección de Ofertas (no rompe la promo si falla).
-                    try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
-                    catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
+                    // Agregar a Ofertas solo si hay precio tachado (descuento real).
+                    if ($tachado !== null) {
+                        try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
+                        catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
+                    }
                     $actions[] = [
                         'accion'   => 'aplicada',
                         'sku'      => $p['sku'],
@@ -267,9 +327,11 @@ function processDue() {
                         $p['originalPrice']     = $current;
                         $p['originalCompareAt'] = $v['compareAtPrice'];
                         $p['msg']               = 'Re-aplicada (el precio había cambiado) ' . date('Y-m-d H:i');
-                        // Asegurar que siga en la colección de Ofertas.
-                        try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
-                        catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
+                        // Asegurar que siga en Ofertas solo si hay precio tachado.
+                        if ($tachado !== null) {
+                            try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
+                            catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
+                        }
                         $actions[] = [
                             'accion'   => 're-aplicada',
                             'sku'      => $p['sku'],
@@ -311,6 +373,17 @@ function processDue() {
     unset($p);
 
     if ($changed) saveJson(SCHEDULE_FILE, $schedule);
+
+    // Barrido de la colección de Ofertas: quitar los que no tengan tachado.
+    try {
+        $fuera = cleanOfertasCollection();
+        foreach ($fuera as $titulo) {
+            $actions[] = ['accion' => 'sacada de ofertas (sin tachado)', 'producto' => $titulo];
+        }
+    } catch (Exception $e) {
+        // No romper el proceso si el barrido falla.
+    }
+
     foreach ($actions as $a) addHistory($a);
 
     return $actions;
