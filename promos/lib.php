@@ -22,6 +22,28 @@ if (!defined('CREAR_PRODUCTOS_FALTANTES')) {
     define('CREAR_PRODUCTOS_FALTANTES', true);
 }
 
+// Categorías/etiquetas de "fórmula médica": NO se publican en Ofertas.
+// (RX, control especial y genéricos). Se compara contra productType y tags.
+if (!defined('OFERTAS_EXCLUIR')) {
+    define('OFERTAS_EXCLUIR', 'rx medicamentos|genericos medicamentos|control-especial|control especial');
+}
+
+// ¿Es un producto de fórmula médica? (excluido de la colección de Ofertas)
+function esFormulaMedica($productType, $tags) {
+    $patrones = array_filter(explode('|', OFERTAS_EXCLUIR));
+    $texto = strtolower(' ' . (string)$productType . ' ' . implode(' ', (array)$tags) . ' ');
+    // Quitar acentos para comparar sin depender de tildes.
+    $texto = strtr($texto, ['á'=>'a','é'=>'e','í'=>'i','ó'=>'o','ú'=>'u']);
+    foreach ($patrones as $pat) {
+        if (strpos($texto, trim($pat)) !== false) return true;
+    }
+    // La etiqueta exacta "rx" también marca fórmula médica.
+    foreach ((array)$tags as $t) {
+        if (strtolower(trim($t)) === 'rx') return true;
+    }
+    return false;
+}
+
 // ── Access token (client credentials grant, expira cada 24 h) ──
 function getAccessToken() {
     if (file_exists(TOKEN_CACHE_FILE)) {
@@ -118,7 +140,7 @@ function findVariantBySku($sku) {
             edges {
                 node {
                     id sku price compareAtPrice
-                    product { id title }
+                    product { id title productType tags }
                 }
             }
         }
@@ -213,7 +235,7 @@ function cleanOfertasCollection() {
                 products(first: 50, after: $cursor) {
                     pageInfo { hasNextPage endCursor }
                     edges { node {
-                        id title
+                        id title productType tags
                         variants(first: 20) { edges { node { price compareAtPrice } } }
                     } }
                 }
@@ -231,9 +253,11 @@ function cleanOfertasCollection() {
                 $cmp   = $ve['node']['compareAtPrice'];
                 if ($cmp !== null && $cmp !== '' && (float)$cmp > $price) { $tachado = true; break; }
             }
-            if (!$tachado) {
+            // Sacar si no tiene tachado, o si es fórmula médica (RX/control/genéricos).
+            $esRx = esFormulaMedica($node['productType'] ?? '', $node['tags'] ?? []);
+            if (!$tachado || $esRx) {
                 $idsQuitar[]  = $node['id'];
-                $removidos[]  = $node['title'];
+                $removidos[]  = $node['title'] . ($esRx ? ' (fórmula médica)' : '');
             }
         }
 
@@ -362,10 +386,16 @@ function processDue() {
                     if (empty($p['product'])) $p['product'] = $v['product']['title'] ?? '';
                     $p['status'] = 'activa';
 
-                    // Agregar a Ofertas solo si hay precio tachado (descuento real).
-                    if ($tachado !== null) {
+                    // Agregar a Ofertas solo si: hay tachado (descuento real)
+                    // y NO es fórmula médica (RX / control / genéricos).
+                    $prodTipo = $v['product']['productType'] ?? '';
+                    $prodTags = $v['product']['tags'] ?? [];
+                    $esRx     = esFormulaMedica($prodTipo, $prodTags);
+                    if ($tachado !== null && !$esRx) {
                         try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
                         catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
+                    } elseif ($esRx) {
+                        $p['msg'] .= ' · fórmula médica: no se publica en Ofertas';
                     }
 
                     $actions[] = [
@@ -407,8 +437,9 @@ function processDue() {
                         $p['originalPrice']     = $current;
                         $p['originalCompareAt'] = $v['compareAtPrice'];
                         $p['msg']               = 'Re-aplicada (el precio había cambiado) ' . date('Y-m-d H:i');
-                        // Asegurar que siga en Ofertas solo si hay precio tachado.
-                        if ($tachado !== null) {
+                        // Sigue en Ofertas solo si hay tachado y no es fórmula médica.
+                        $esRx = esFormulaMedica($v['product']['productType'] ?? '', $v['product']['tags'] ?? []);
+                        if ($tachado !== null && !$esRx) {
                             try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; }
                             catch (Exception $ce) { $p['msg'] .= ' · ' . $ce->getMessage(); }
                         }

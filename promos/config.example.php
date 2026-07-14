@@ -26,6 +26,10 @@ define('OFERTAS_COLLECTION_ID', 'gid://shopify/Collection/180686913667');
 define('ENRIQUECER_TAG', 'pendiente-enriquecer');
 define('CREAR_PRODUCTOS_FALTANTES', true);
 
+// Fórmula médica: estas categorías/etiquetas NO se publican en Ofertas
+// (aunque sí se les aplica el precio de promoción). Separadas por "|".
+define('OFERTAS_EXCLUIR', 'rx medicamentos|genericos medicamentos|control-especial|control especial');
+
 // Archivos de datos (no tocar)
 define('TOKEN_CACHE_FILE', __DIR__ . '/token_cache.json');
 define('SCHEDULE_FILE',    __DIR__ . '/schedule.json');
