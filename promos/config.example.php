@@ -30,7 +30,18 @@ define('CREAR_PRODUCTOS_FALTANTES', true);
 // (aunque sí se les aplica el precio de promoción). Separadas por "|".
 define('OFERTAS_EXCLUIR', 'rx medicamentos|genericos medicamentos|control-especial|control especial');
 
+// Descuento estándar de fin de mes: % aplicado en el CARRITO durante los
+// últimos N días de cada mes, en todos los productos. Se crea como descuento
+// automático nativo de Shopify (requiere el permiso write_discounts en la app).
+// Durante la ventana, las promos programadas se ajustan solas para que el
+// total que paga el cliente quede exacto (no se apila doble descuento).
+define('FINMES_ACTIVO', true);   // false para desactivarlo por completo
+define('FINMES_PCT',    10);     // porcentaje del carrito
+define('FINMES_DIAS',   7);      // últimos N días del mes
+// define('FINMES_TITULO', 'Descuento Fin de Mes 10%');  // nombre en Shopify (opcional)
+
 // Archivos de datos (no tocar)
+define('FINMES_FILE',      __DIR__ . '/finmes.json');
 define('TOKEN_CACHE_FILE', __DIR__ . '/token_cache.json');
 define('SCHEDULE_FILE',    __DIR__ . '/schedule.json');
 define('HISTORY_FILE',     __DIR__ . '/history.json');

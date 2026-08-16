@@ -55,6 +55,14 @@
     .cron-status.ok   { display: block; background: rgba(163,230,53,.10); border: 1px solid rgba(163,230,53,.25); color: #a3e635; }
     .cron-status.warn { display: block; background: rgba(251,191,36,.10); border: 1px solid rgba(251,191,36,.3); color: #fcd34d; }
     .cron-status.err  { display: block; background: rgba(239,68,68,.10); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; }
+    .finmes { font-size: .85rem; margin: 0 0 14px; padding: 10px 14px; border-radius: 10px; display: none;
+              background: rgba(96,165,250,.10); border: 1px solid rgba(96,165,250,.30); color: #bfdbfe; }
+    .finmes.on  { display: block; background: rgba(163,230,53,.10); border-color: rgba(163,230,53,.30); color: #bef264; }
+    .finmes.off { display: block; }
+    .finmes.err { display: block; background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.3); color: #fca5a5; }
+    .finmes b { font-weight: 700; }
+    .finmes .fm-title { font-size: .95rem; }
+    .finmes .fm-sub { opacity: .85; }
     @media(max-width:600px){ .dates-row { flex-direction: column; } }
   </style>
 </head>
@@ -126,6 +134,7 @@
         <span class="server-time" id="serverTime"></span>
       </div>
       <div id="cronStatus" class="cron-status"></div>
+      <div id="finmesBanner" class="finmes"></div>
       <div class="tscroll">
         <table class="data-table">
           <thead>
@@ -167,8 +176,46 @@ function refresh() {
       render(d.schedule, d.history);
       if (d.now) el('serverTime').textContent = 'Servidor: ' + d.now + ' (Bogotá)';
       renderCronStatus(d.cron, d.nowTs);
+      renderFinMes(d.finmes);
     }
   });
+}
+
+// ── Descuento estándar de fin de mes ─────────────────────────────
+function renderFinMes(fm) {
+  const box = el('finmesBanner');
+  if (!box) return;
+  if (!fm) { box.className = 'finmes'; box.innerHTML = ''; return; }
+
+  const fmt = (s) => {
+    // 'YYYY-MM-DD' → 'DD MMM'
+    const m = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const p = String(s).split('-');
+    return p.length === 3 ? (parseInt(p[2],10) + ' ' + m[parseInt(p[1],10)-1]) : s;
+  };
+
+  if (!fm.activo) {
+    box.className = 'finmes off';
+    box.innerHTML = '<div class="fm-title">🗓️ Descuento estándar de fin de mes: <b>desactivado</b></div>';
+    return;
+  }
+  if (fm.error) {
+    box.className = 'finmes err';
+    box.innerHTML = '<div class="fm-title">🗓️ Descuento fin de mes ' + fm.pct + '% — <b>error al crear en Shopify</b></div>'
+      + '<div class="fm-sub">' + fm.error + '. Verifica que la app tenga el permiso <b>write_discounts</b> en Shopify.</div>';
+    return;
+  }
+
+  const ventana = fmt(fm.inicio) + ' – ' + fmt(fm.fin);
+  if (fm.enVentana) {
+    box.className = 'finmes on';
+    box.innerHTML = '<div class="fm-title">🗓️ <b>' + fm.pct + '% de descuento fin de mes ACTIVO</b> — se aplica solo en el carrito</div>'
+      + '<div class="fm-sub">Vigente ' + ventana + ' · en todos los productos. Las promos de esta lista ya vienen ajustadas para que el total quede exacto.</div>';
+  } else {
+    box.className = 'finmes';
+    box.innerHTML = '<div class="fm-title">🗓️ Descuento estándar: <b>' + fm.pct + '% en el carrito los últimos ' + fm.dias + ' días del mes</b></div>'
+      + '<div class="fm-sub">Próxima activación automática: ' + ventana + (fm.shopifyId ? ' · programado en Shopify ✓' : '') + '</div>';
+  }
 }
 
 // ── Estado del cron (ejecución automática) ───────────────────────

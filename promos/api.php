@@ -32,6 +32,7 @@ try {
             'now'      => date('Y-m-d H:i'),
             'nowTs'    => time(),
             'cron'     => $hb,  // {last, ts, acciones, origen} o vacío si nunca corrió
+            'finmes'   => estadoFinMes(),  // descuento estándar de fin de mes
         ]);
         exit;
     }

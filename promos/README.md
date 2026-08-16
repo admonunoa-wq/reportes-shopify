@@ -43,6 +43,48 @@ El Cron Job de cPanel ejecuta `cron.php`, que llama a `processDue()`:
 - **Todas** las referencias del programador actualizan su precio.
 - **Solo las que NO son medicamentos de formulación médica** se publican en Ofertas.
 
+## Descuento estándar de fin de mes (10% en el carrito)
+
+Un **10% adicional en todo el carrito** durante los **últimos 7 días de cada mes**.
+Se implementa como **descuento automático nativo de Shopify** (se refleja solo en
+el carrito / checkout, no en el precio de la vitrina), y lo gestiona el cron sin
+intervención manual.
+
+- Cada corrida del cron **crea o actualiza** el descuento automático apuntando a
+  la ventana del mes en curso (Shopify lo activa/desactiva solo por fechas).
+- Cuando cambia el mes, el cron mueve la ventana al nuevo mes automáticamente.
+- Se muestra un **banner arriba de la lista de promociones** con el estado
+  (activo ahora / próxima activación / error de permisos).
+
+### Interacción con las promos programadas ("mantener total exacto")
+
+Durante la ventana de fin de mes, para un producto que ya tiene promo programada,
+la app **sube el precio de lista lo justo** (`precio_objetivo ÷ 0.9`) para que,
+tras el 10% del carrito, el cliente pague **exactamente** el precio de promo
+deseado. Así no se apila doble descuento ni se erosiona el margen.
+
+> Ejemplo: promo objetivo $70 (antes $100). En la última semana la app fija el
+> precio en ~$77.78; el carrito aplica −10% y el cliente paga **$70 exacto**.
+> El tachado sigue mostrando $100.
+
+Al terminar la ventana, la re-verificación devuelve el precio a su valor de promo
+normal. Si un producto tiene una promo **menor al 10%**, no se ajusta (el 10% del
+carrito se suma encima).
+
+### Requisito de permisos
+
+El descuento automático requiere que la app de Shopify tenga el scope
+**`write_discounts`** (y `read_discounts`). Si falta, el banner mostrará el error
+y no se creará el descuento (las promos de precio siguen funcionando igual).
+
+### Configuración (`config.php`)
+
+```php
+define('FINMES_ACTIVO', true);  // encender/apagar
+define('FINMES_PCT',    10);    // % del carrito
+define('FINMES_DIAS',   7);     // últimos N días del mes
+```
+
 ## Monitoreo
 
 - La página muestra un indicador de la **última ejecución automática** del cron:
@@ -74,6 +116,8 @@ Ver `config.example.php`. Claves principales:
 - `CREAR_PRODUCTOS_FALTANTES` — activar/desactivar la creación automática.
 - `OFERTAS_EXCLUIR` — patrones de fórmula médica a excluir de Ofertas
   (`rx medicamentos|genericos medicamentos|control-especial|control especial`).
+- `FINMES_ACTIVO` / `FINMES_PCT` / `FINMES_DIAS` — descuento estándar de fin de mes
+  (ver sección dedicada). Requiere el scope `write_discounts`.
 
 ## Cron Job (cPanel)
 
@@ -87,3 +131,4 @@ Ver `config.example.php`. Claves principales:
 - `history.json` — historial de acciones.
 - `token_cache.json` — token de Shopify (cache 24 h).
 - `cron_last.json` — última ejecución del cron (latido).
+- `finmes.json` — id y ventana del descuento automático de fin de mes.
