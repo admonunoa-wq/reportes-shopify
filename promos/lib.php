@@ -48,11 +48,12 @@ function esFormulaMedica($productType, $tags) {
 // 10% en todo el carrito durante los últimos N días de cada mes.
 // Se implementa como descuento AUTOMÁTICO nativo de Shopify (se
 // refleja solo en el carrito) y lo gestiona el cron sin intervención.
-if (!defined('FINMES_ACTIVO')) define('FINMES_ACTIVO', true);   // encender/apagar
-if (!defined('FINMES_PCT'))    define('FINMES_PCT', 10);        // % del carrito
-if (!defined('FINMES_DIAS'))   define('FINMES_DIAS', 7);        // últimos N días del mes
-if (!defined('FINMES_TITULO')) define('FINMES_TITULO', 'Descuento Fin de Mes ' . FINMES_PCT . '%');
-if (!defined('FINMES_FILE'))   define('FINMES_FILE', __DIR__ . '/finmes.json');
+if (!defined('FINMES_ACTIVO'))  define('FINMES_ACTIVO', true);   // encender/apagar
+if (!defined('FINMES_PCT'))     define('FINMES_PCT', 10);        // % del carrito
+if (!defined('FINMES_DIAS'))    define('FINMES_DIAS', 7);        // últimos N días del mes
+if (!defined('FINMES_MINIMO'))  define('FINMES_MINIMO', 80000);  // mínimo de compra (0 = sin mínimo)
+if (!defined('FINMES_TITULO'))  define('FINMES_TITULO', 'Descuento Fin de Mes ' . FINMES_PCT . '%');
+if (!defined('FINMES_FILE'))    define('FINMES_FILE', __DIR__ . '/finmes.json');
 
 // Ventana [inicio, fin] de los últimos N días del mes que contiene $ref.
 function ventanaFinMes($ref = null) {
@@ -74,27 +75,6 @@ function ventanaFinMes($ref = null) {
     ];
 }
 
-// ¿El 10% de fin de mes está activo hoy?
-function finMesActivoHoy() {
-    if (!FINMES_ACTIVO) return false;
-    $v = ventanaFinMes();
-    return $v['activa'];
-}
-
-// Precio de lista a fijar para que, tras el 10% del carrito, el cliente
-// pague EXACTAMENTE el precio de promo objetivo (solo durante la ventana).
-// Si el "gross-up" superara el precio "antes", no tiene sentido: deja la
-// promo tal cual y el 10% se suma encima (caso de promos menores al 10%).
-function precioEfectivo($promoObjetivo, $antes = 0) {
-    $p = round((float)$promoObjetivo, 2);
-    if (!finMesActivoHoy()) return $p;
-    $factor = 1 - (FINMES_PCT / 100);
-    if ($factor <= 0) return $p;
-    $ef = round($p / $factor, 2);
-    if ($antes > 0 && $ef >= (float)$antes) return $p;
-    return $ef;
-}
-
 // Estado para la interfaz (banner de "descuento estándar").
 function estadoFinMes() {
     $v    = ventanaFinMes();
@@ -103,12 +83,45 @@ function estadoFinMes() {
         'activo'    => (bool)FINMES_ACTIVO,
         'pct'       => FINMES_PCT,
         'dias'      => FINMES_DIAS,
+        'minimo'    => (float)FINMES_MINIMO,
         'inicio'    => $v['inicio'],
         'fin'       => $v['fin'],
         'enVentana' => $v['activa'],
         'shopifyId' => $data['id'] ?? null,
         'error'     => $data['error'] ?? null,
     ];
+}
+
+// ¿Ya hay un descuento automático (creado a mano) que cubre esta ventana?
+// Evita duplicar el 10% cuando el mes ya tiene uno hecho manualmente.
+function existeDescuentoEnVentana($v, $ignorarId = null) {
+    $res = shopifyGQL('
+    query {
+        automaticDiscountNodes(first: 50) {
+            edges { node {
+                id
+                automaticDiscount {
+                    __typename
+                    ... on DiscountAutomaticBasic { status startsAt endsAt }
+                }
+            } }
+        }
+    }');
+    $edges = $res['data']['automaticDiscountNodes']['edges'] ?? [];
+    $ws = strtotime($v['startsAt']);
+    $we = strtotime($v['endsAt']);
+    foreach ($edges as $e) {
+        $node = $e['node'];
+        if ($ignorarId && ($node['id'] ?? '') === $ignorarId) continue;
+        $d = $node['automaticDiscount'] ?? [];
+        if (($d['__typename'] ?? '') !== 'DiscountAutomaticBasic') continue;
+        $st = $d['status'] ?? '';
+        if ($st !== 'ACTIVE' && $st !== 'SCHEDULED') continue;
+        $s  = strtotime($d['startsAt'] ?? '');
+        $en = !empty($d['endsAt']) ? strtotime($d['endsAt']) : PHP_INT_MAX;
+        if ($s !== false && $s <= $we && $en >= $ws) return true;   // se solapan
+    }
+    return false;
 }
 
 // Crea/actualiza el descuento automático nativo para la ventana del mes.
@@ -133,9 +146,19 @@ function syncDescuentoFinMes() {
             'shippingDiscounts' => true,
         ],
     ];
+    // Mínimo de compra (subtotal). 0 = sin mínimo.
+    if (FINMES_MINIMO > 0) {
+        $input['minimumRequirement'] = [
+            'subtotal' => ['greaterThanOrEqualToSubtotal' => number_format((float)FINMES_MINIMO, 2, '.', '')],
+        ];
+    }
 
     try {
         if (!$id) {
+            // No duplicar: si ya hay un descuento (manual) que cubre esta ventana, no crear otro.
+            if (existeDescuentoEnVentana($v)) {
+                return ['accion' => ''];
+            }
             $res = shopifyGQL('
             mutation($d: DiscountAutomaticBasicInput!) {
                 discountAutomaticBasicCreate(automaticBasicDiscount: $d) {
@@ -461,11 +484,23 @@ function crearProductoConPromo($sku, $nombre, $promo, $before) {
 }
 
 // ── Motor: aplicar y revertir promos vencidas ──────────────────
-function processDue() {
+// $stats (por referencia) devuelve el resumen de la validación aunque no
+// haya cambios: cuántas promos activas se revisaron contra Shopify, cuántas
+// ya estaban con el precio correcto y cuántas se re-ajustaron.
+function processDue(&$stats = null) {
     $schedule = loadJson(SCHEDULE_FILE);
     $today    = date('Y-m-d');
     $actions  = [];
     $changed  = false;
+    $stats    = [
+        'programadas'       => 0,  // en estado "programada" (aún sin iniciar o en curso)
+        'activas'           => 0,  // en estado "activa" dentro de fechas
+        'activas_revisadas' => 0,  // activas comparadas contra Shopify
+        'activas_ok'        => 0,  // activas cuyo precio ya coincidía
+        'reaplicadas'       => 0,  // activas re-ajustadas (el precio había cambiado)
+        'activadas'         => 0,  // programadas que se activaron ahora
+        'revertidas'        => 0,  // activas que terminaron y se restauraron
+    ];
 
     foreach ($schedule as &$p) {
         $start = $p['start'] ?? '';
@@ -487,9 +522,7 @@ function processDue() {
                         $p['status'] = 'error';
                         $p['msg']    = 'SKU no encontrado y sin nombre para crear el producto';
                     } else {
-                        // Durante la ventana de fin de mes, fija el precio "gross-up"
-                        // para que tras el 10% del carrito quede el precio objetivo.
-                        $v = crearProductoConPromo($p['sku'], $nombre, precioEfectivo($promo, $beforeFile), $beforeFile);
+                        $v = crearProductoConPromo($p['sku'], $nombre, $promo, $beforeFile);
                         $creado = true;
                         addHistory(['accion' => 'producto creado', 'sku' => $p['sku'], 'producto' => $nombre]);
                     }
@@ -511,18 +544,17 @@ function processDue() {
                         $p['originalCompareAt'] = null;
                         $p['msg']               = 'Producto creado y promo aplicada ' . date('Y-m-d H:i');
                     } else {
-                        // Precio efectivo: normal, o "gross-up" si hay 10% de fin de mes.
-                        setPrices($v['id'], precioEfectivo($promo, $before), $tachado, $v['product']['id']);
+                        setPrices($v['id'], $promo, $tachado, $v['product']['id']);
                         $p['originalPrice']     = $v['price'];        // estado real previo
                         $p['originalCompareAt'] = $v['compareAtPrice'];
-                        $p['msg']               = 'Aplicada ' . date('Y-m-d H:i')
-                                                . (finMesActivoHoy() ? ' · ajustada por 10% fin de mes' : '');
+                        $p['msg']               = 'Aplicada ' . date('Y-m-d H:i');
                     }
 
                     $p['variantId'] = $v['id'];
                     $p['productId'] = $v['product']['id'];
                     if (empty($p['product'])) $p['product'] = $v['product']['title'] ?? '';
                     $p['status'] = 'activa';
+                    $stats['activadas']++;
 
                     // Agregar a Ofertas solo si: hay tachado (descuento real)
                     // y NO es fórmula médica (RX / control / genéricos).
@@ -557,29 +589,26 @@ function processDue() {
             // Re-aplicar promo ACTIVA que aún está en fechas pero cuyo
             // precio fue cambiado en Shopify (p.ej. por el actualizador de PVP).
             elseif ($p['status'] === 'activa' && $today >= $start && $today <= $end) {
+                $stats['activas']++;
                 $v = findVariantBySku($p['sku']);
                 if ($v) {
-                    $promo     = (float)$p['promoPrice'];
-                    $current   = (float)$v['price'];
-                    $beforeF   = (float)($p['beforePrice'] ?? 0);
-                    $enVentana = finMesActivoHoy();
-                    // "Antes" para el tachado: el del archivo; si no hay, el precio
-                    // actual (nunca durante la ventana: ahí el actual es el gross-up).
-                    $before   = $beforeF > 0 ? $beforeF
-                              : ((!$enVentana && $current > $promo) ? $current : 0);
-                    $tachado  = ($before > $promo) ? $before : null;
-                    $efectivo = precioEfectivo($promo, $before);
-                    // Actúa si el precio actual NO es el efectivo esperado
-                    // (cambio del actualizador de PVP, o cruce de ventana fin de mes).
-                    if (abs($current - $efectivo) > 0.001) {
-                        setPrices($v['id'], $efectivo, $tachado, $v['product']['id']);
+                    $stats['activas_revisadas']++;
+                    $promo   = (float)$p['promoPrice'];
+                    $current = (float)$v['price'];
+                    // Solo actúa si el precio actual NO es el de promoción.
+                    if (abs($current - $promo) > 0.001) {
+                        // El nuevo precio real pasa a ser el "antes" (precio tachado)
+                        // y el valor al que se restaurará al terminar la promo.
+                        $before  = ($current > $promo) ? $current : (float)($p['beforePrice'] ?? 0);
+                        $tachado = ($before > $promo) ? $before : null;
+
+                        setPrices($v['id'], $promo, $tachado, $v['product']['id']);
 
                         $p['variantId']         = $v['id'];
                         $p['productId']         = $v['product']['id'];
-                        // No se toca originalPrice: sigue siendo el precio previo real
-                        // capturado al activar, para restaurar correcto al finalizar.
-                        $p['msg']               = 'Re-aplicada (el precio había cambiado) ' . date('Y-m-d H:i')
-                                                . ($enVentana ? ' · ajuste 10% fin de mes' : '');
+                        $p['originalPrice']     = $current;
+                        $p['originalCompareAt'] = $v['compareAtPrice'];
+                        $p['msg']               = 'Re-aplicada (el precio había cambiado) ' . date('Y-m-d H:i');
                         // Sigue en Ofertas solo si hay tachado y no es fórmula médica.
                         $esRx = esFormulaMedica($v['product']['productType'] ?? '', $v['product']['tags'] ?? []);
                         if ($tachado !== null && !$esRx) {
@@ -593,7 +622,11 @@ function processDue() {
                             'promo'    => $promo,
                             'antes'    => $before,
                         ];
+                        $stats['reaplicadas']++;
                         $changed = true;
+                    } else {
+                        // El precio en Shopify ya coincide con la promo: todo en orden.
+                        $stats['activas_ok']++;
                     }
                 }
             }
@@ -605,6 +638,7 @@ function processDue() {
                 }
                 $p['status'] = 'finalizada';
                 $p['msg']    = 'Precio restaurado ' . date('Y-m-d H:i');
+                $stats['revertidas']++;
                 // Quitar de la colección de Ofertas (no rompe el cierre si falla).
                 if (!empty($p['productId'])) {
                     try { removeFromOfertas($p['productId']); $p['enOfertas'] = false; }
@@ -651,4 +685,92 @@ function processDue() {
     foreach ($actions as $a) addHistory($a);
 
     return $actions;
+}
+
+// ── Re-sincronización forzada de precios ───────────────────────
+// Compara, promo por promo (programadas/activas en fechas), el precio de la
+// LISTA de la app contra el precio real en Shopify, y FUERZA el precio de
+// promo cuando no coincide. Devuelve un reporte legible de cada comparación.
+// Es idempotente y no depende del estado interno: sirve de red de seguridad
+// cuando el motor de estados no detectó un cambio.
+function resyncPreciosActivos() {
+    $schedule = loadJson(SCHEDULE_FILE);
+    $today    = date('Y-m-d');
+    $rep      = [];
+    $changed  = false;
+
+    foreach ($schedule as &$p) {
+        $st = $p['status'] ?? '';
+        if (!in_array($st, ['programada', 'activa'], true)) continue;
+
+        $start = $p['start'] ?? '';
+        $end   = $p['end']   ?? '';
+        if (!$start || !$end) continue;
+
+        $enFechas = ($today >= $start && $today <= $end);
+        $sku      = trim($p['sku'] ?? '');
+        $promo    = (float)($p['promoPrice'] ?? 0);
+        $before   = (float)($p['beforePrice'] ?? 0);
+
+        $item = [
+            'sku'      => $sku,
+            'producto' => $p['product'] ?? '',
+            'status'   => $st,
+            'promoApp' => $promo,
+            'shopify'  => null,
+            'enFechas' => $enFechas,
+        ];
+
+        if (!$enFechas) { $item['resultado'] = 'fuera de fechas'; $rep[] = $item; continue; }
+
+        $v = null; $errFind = null;
+        try { $v = findVariantBySku($sku); }
+        catch (Exception $e) { $errFind = $e->getMessage(); }
+
+        if (!$v) {
+            $item['resultado'] = 'SKU no encontrado en Shopify' . ($errFind ? ' (' . $errFind . ')' : '');
+            $rep[] = $item;
+            continue;
+        }
+
+        $current = (float)$v['price'];
+        $item['shopify'] = $current;
+
+        if (abs($current - $promo) <= 0.001) {
+            $item['resultado'] = 'ya coincide';
+            $rep[] = $item;
+            continue;
+        }
+
+        // No coincide: forzar el precio de promo + tachado.
+        $antes   = $before > 0 ? $before : (($current > $promo) ? $current : 0);
+        $tachado = ($antes > $promo) ? $antes : null;
+        try {
+            setPrices($v['id'], $promo, $tachado, $v['product']['id']);
+            $p['status']    = 'activa';
+            $p['variantId'] = $v['id'];
+            $p['productId'] = $v['product']['id'];
+            if (!isset($p['originalPrice']) || $p['originalPrice'] === null) {
+                $p['originalPrice']     = $current;
+                $p['originalCompareAt'] = $v['compareAtPrice'];
+            }
+            $p['msg']          = 'Re-sincronizada ' . date('Y-m-d H:i');
+            $item['resultado'] = 'AJUSTADO: ' . $current . ' → ' . $promo;
+            $changed = true;
+
+            // Ofertas: solo si hay tachado y no es fórmula médica.
+            $esRx = esFormulaMedica($v['product']['productType'] ?? '', $v['product']['tags'] ?? []);
+            if ($tachado !== null && !$esRx) {
+                try { addToOfertas($v['product']['id']); $p['enOfertas'] = true; } catch (Exception $ce) {}
+            }
+            addHistory(['accion' => 're-sincronizada', 'sku' => $sku, 'producto' => $p['product'] ?? '', 'promo' => $promo, 'antes' => $current]);
+        } catch (Exception $e) {
+            $item['resultado'] = 'ERROR al aplicar: ' . $e->getMessage();
+        }
+        $rep[] = $item;
+    }
+    unset($p);
+
+    if ($changed) saveJson(SCHEDULE_FILE, $schedule);
+    return $rep;
 }

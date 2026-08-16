@@ -23,6 +23,11 @@ El Cron Job de cPanel ejecuta `cron.php`, que llama a `processDue()`:
 - **Al terminar la promo:** restaura el precio original (y quita el tachado).
 - **Re-verificación:** si el actualizador de PVP cambió el precio mientras la
   promo seguía vigente, la vuelve a aplicar.
+- **Re-sincronización forzada (botón "Ejecutar"):** compara, SKU por SKU, el
+  precio de la lista de la app contra el precio real en Shopify y **fuerza** el
+  precio de promo donde no coincida. Muestra un reporte de la comparación
+  (ajustado / ya coincide / SKU no encontrado) — es la red de seguridad si el
+  motor de estados no detectó un cambio.
 - **Creación de productos faltantes:** si un SKU no existe en Shopify, crea el
   producto (nombre + precio promo + tachado), en estado **ACTIVE**, con la
   etiqueta `pendiente-enriquecer` para que el proceso de enriquecimiento de las
@@ -56,20 +61,17 @@ intervención manual.
 - Se muestra un **banner arriba de la lista de promociones** con el estado
   (activo ahora / próxima activación / error de permisos).
 
-### Interacción con las promos programadas ("mantener total exacto")
+### Mínimo de compra
 
-Durante la ventana de fin de mes, para un producto que ya tiene promo programada,
-la app **sube el precio de lista lo justo** (`precio_objetivo ÷ 0.9`) para que,
-tras el 10% del carrito, el cliente pague **exactamente** el precio de promo
-deseado. Así no se apila doble descuento ni se erosiona el margen.
+El descuento aplica solo cuando el subtotal del carrito llega a `FINMES_MINIMO`
+(por defecto **$80.000**). Poner `0` para que aplique sin mínimo.
 
-> Ejemplo: promo objetivo $70 (antes $100). En la última semana la app fija el
-> precio en ~$77.78; el carrito aplica −10% y el cliente paga **$70 exacto**.
-> El tachado sigue mostrando $100.
+### Interacción con las promos programadas (no se infla el precio)
 
-Al terminar la ventana, la re-verificación devuelve el precio a su valor de promo
-normal. Si un producto tiene una promo **menor al 10%**, no se ajusta (el 10% del
-carrito se suma encima).
+Como el 10% tiene mínimo de compra, **no se altera el precio de las promos**
+programadas: quedan a su precio normal. El 10% del carrito se suma encima **solo
+si el cliente supera el mínimo**. Así nunca se cobra de más en carritos pequeños
+que no alcanzan el mínimo, y los carritos grandes reciben el 10% adicional.
 
 ### Requisito de permisos
 
@@ -80,9 +82,10 @@ y no se creará el descuento (las promos de precio siguen funcionando igual).
 ### Configuración (`config.php`)
 
 ```php
-define('FINMES_ACTIVO', true);  // encender/apagar
-define('FINMES_PCT',    10);    // % del carrito
-define('FINMES_DIAS',   7);     // últimos N días del mes
+define('FINMES_ACTIVO', true);   // encender/apagar
+define('FINMES_PCT',    10);     // % del carrito
+define('FINMES_DIAS',   7);      // últimos N días del mes
+define('FINMES_MINIMO', 80000);  // mínimo de compra ($); 0 = sin mínimo
 ```
 
 ## Monitoreo
@@ -116,8 +119,8 @@ Ver `config.example.php`. Claves principales:
 - `CREAR_PRODUCTOS_FALTANTES` — activar/desactivar la creación automática.
 - `OFERTAS_EXCLUIR` — patrones de fórmula médica a excluir de Ofertas
   (`rx medicamentos|genericos medicamentos|control-especial|control especial`).
-- `FINMES_ACTIVO` / `FINMES_PCT` / `FINMES_DIAS` — descuento estándar de fin de mes
-  (ver sección dedicada). Requiere el scope `write_discounts`.
+- `FINMES_ACTIVO` / `FINMES_PCT` / `FINMES_DIAS` / `FINMES_MINIMO` — descuento
+  estándar de fin de mes (ver sección dedicada). Requiere el scope `write_discounts`.
 
 ## Cron Job (cPanel)
 

@@ -136,8 +136,17 @@ try {
     }
 
     if ($action === 'run') {
-        $actions = processDue();
-        echo json_encode(['actions' => $actions, 'schedule' => loadJson(SCHEDULE_FILE)]);
+        $stats   = null;
+        $actions = processDue($stats);
+        // Red de seguridad: compara la lista de la app contra Shopify y fuerza
+        // el precio de promo donde no coincida (devuelve reporte por SKU).
+        $diagnostico = resyncPreciosActivos();
+        echo json_encode([
+            'actions'     => $actions,
+            'stats'       => $stats,
+            'diagnostico' => $diagnostico,
+            'schedule'    => loadJson(SCHEDULE_FILE),
+        ]);
         exit;
     }
 

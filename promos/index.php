@@ -63,6 +63,13 @@
     .finmes b { font-weight: 700; }
     .finmes .fm-title { font-size: .95rem; }
     .finmes .fm-sub { opacity: .85; }
+    .diag { margin: 0 0 14px; padding: 10px 12px; border-radius: 10px;
+            background: rgba(148,163,184,.08); border: 1px solid rgba(148,163,184,.2); }
+    .diag-title { font-size: .85rem; font-weight: 700; margin-bottom: 8px; }
+    .diag table { font-size: .8rem; }
+    .diag tr.d-fix td { color: #fcd34d; }
+    .diag tr.d-ok  td { opacity: .7; }
+    .diag tr.d-err td { color: #fca5a5; }
     @media(max-width:600px){ .dates-row { flex-direction: column; } }
   </style>
 </head>
@@ -135,6 +142,7 @@
       </div>
       <div id="cronStatus" class="cron-status"></div>
       <div id="finmesBanner" class="finmes"></div>
+      <div id="diagBox" class="diag" style="display:none"></div>
       <div class="tscroll">
         <table class="data-table">
           <thead>
@@ -207,14 +215,17 @@ function renderFinMes(fm) {
   }
 
   const ventana = fmt(fm.inicio) + ' – ' + fmt(fm.fin);
+  const min = (fm.minimo && fm.minimo > 0)
+    ? ' · compras desde $' + Number(fm.minimo).toLocaleString('es-CO')
+    : ' · sin mínimo de compra';
   if (fm.enVentana) {
     box.className = 'finmes on';
-    box.innerHTML = '<div class="fm-title">🗓️ <b>' + fm.pct + '% de descuento fin de mes ACTIVO</b> — se aplica solo en el carrito</div>'
-      + '<div class="fm-sub">Vigente ' + ventana + ' · en todos los productos. Las promos de esta lista ya vienen ajustadas para que el total quede exacto.</div>';
+    box.innerHTML = '<div class="fm-title">🗓️ <b>' + fm.pct + '% de descuento fin de mes ACTIVO</b> — se aplica en el carrito</div>'
+      + '<div class="fm-sub">Vigente ' + ventana + min + ' · en todos los productos.</div>';
   } else {
     box.className = 'finmes';
     box.innerHTML = '<div class="fm-title">🗓️ Descuento estándar: <b>' + fm.pct + '% en el carrito los últimos ' + fm.dias + ' días del mes</b></div>'
-      + '<div class="fm-sub">Próxima activación automática: ' + ventana + (fm.shopifyId ? ' · programado en Shopify ✓' : '') + '</div>';
+      + '<div class="fm-sub">Próxima activación: ' + ventana + min + (fm.shopifyId ? ' · programado en Shopify ✓' : '') + '</div>';
   }
 }
 
@@ -388,12 +399,54 @@ function runNow() {
     .then(d => {
       if (d.schedule) renderSchedule(d.schedule);
       refresh();
-      const n = (d.actions || []).length;
-      if (n === 0) showMsg('inf', 'ℹ Sin cambios — no hay promos pendientes en este momento.');
-      else         showMsg('ok', '✅ ' + n + ' acción(es) ejecutada(s).');
+      const diag = d.diagnostico || [];
+      const enFechas = diag.filter(x => x.enFechas);
+      const ajust = enFechas.filter(x => (x.resultado || '').startsWith('AJUSTADO')).length;
+      const ok    = enFechas.filter(x => x.resultado === 'ya coincide').length;
+      const noEnc = enFechas.filter(x => (x.resultado || '').startsWith('SKU no encontrado')).length;
+      const errs  = enFechas.filter(x => (x.resultado || '').startsWith('ERROR')).length;
+
+      let tipo = 'ok', msg;
+      if (ajust > 0) {
+        msg = '✅ ' + ajust + ' precio(s) corregido(s) en Shopify · ' + ok + ' ya estaban correctos'
+            + ' (de ' + enFechas.length + ' promos en fechas).';
+      } else if (enFechas.length > 0) {
+        msg = '✅ Revisadas ' + enFechas.length + ' promos activas contra Shopify · todas ya con el precio correcto.';
+      } else {
+        tipo = 'inf';
+        msg = 'ℹ No hay promos activas dentro de fechas para revisar.';
+      }
+      if (noEnc > 0 || errs > 0) {
+        tipo = 'err';
+        msg += ' ⚠ ' + (noEnc ? noEnc + ' SKU no encontrado(s). ' : '') + (errs ? errs + ' error(es). ' : '');
+      }
+      showMsg(tipo, msg);
+      renderDiagnostico(enFechas);
+      if (diag.length) console.table(diag);
     })
     .catch(err => showMsg('err', 'Error: ' + err.message))
     .finally(() => setBtn('runBtn', false, '▶ Ejecutar y re-verificar precios'));
+}
+
+// Tabla de comparación lista-de-la-app vs Shopify tras "Ejecutar".
+function renderDiagnostico(rows) {
+  const box = el('diagBox');
+  if (!box) return;
+  if (!rows || !rows.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const money = (v) => (v === null || v === undefined) ? '—' : '$' + Number(v).toLocaleString('es-CO');
+  const cls = (r) => r.startsWith('AJUSTADO') ? 'd-fix'
+                   : r === 'ya coincide' ? 'd-ok'
+                   : (r.startsWith('SKU no encontrado') || r.startsWith('ERROR')) ? 'd-err' : '';
+  let html = '<div class="diag-title">🔎 Comparación lista de la app vs. Shopify (última ejecución)</div>'
+    + '<div class="tscroll"><table class="data-table"><thead><tr>'
+    + '<th>SKU</th><th>Producto</th><th>Lista app</th><th>Shopify</th><th>Resultado</th></tr></thead><tbody>';
+  rows.forEach(r => {
+    html += '<tr class="' + cls(r.resultado || '') + '"><td>' + (r.sku || '') + '</td><td>' + (r.producto || '')
+      + '</td><td>' + money(r.promoApp) + '</td><td>' + money(r.shopify) + '</td><td>' + (r.resultado || '') + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  box.innerHTML = html;
+  box.style.display = 'block';
 }
 
 // ── Render ───────────────────────────────────────────────────────
