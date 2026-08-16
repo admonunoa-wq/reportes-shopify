@@ -157,6 +157,7 @@ function syncDescuentoFinMes() {
         if (!$id) {
             // No duplicar: si ya hay un descuento (manual) que cubre esta ventana, no crear otro.
             if (existeDescuentoEnVentana($v)) {
+                if (!empty($data['error'])) { unset($data['error']); saveJson(FINMES_FILE, $data); }
                 return ['accion' => ''];
             }
             $res = shopifyGQL('
@@ -192,6 +193,7 @@ function syncDescuentoFinMes() {
             return ['accion' => 'actualizado', 'detalle' => $v['inicio'] . ' → ' . $v['fin']];
         }
 
+        if (!empty($data['error'])) { unset($data['error']); saveJson(FINMES_FILE, $data); }
         return ['accion' => ''];   // sin cambios
     } catch (Exception $e) {
         // Registrar el error (p.ej. falta scope write_discounts) sin romper el cron.
