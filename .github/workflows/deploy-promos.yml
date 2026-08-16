@@ -1,0 +1,45 @@
+name: Deploy promos a hosting
+
+# Sube la carpeta promos/ al hosting (app.uno-a.com) por FTP cada vez que
+# cambia algo en promos/. Protege config.php y los datos (*.json): NO se
+# suben ni se borran del servidor.
+#
+# Requiere 3 secretos en GitHub (Settings -> Secrets and variables -> Actions):
+#   FTP_SERVER    -> host FTP (ej. ftp.uno-a.com o el que da cPanel)
+#   FTP_USERNAME  -> usuario FTP
+#   FTP_PASSWORD  -> contraseña FTP
+
+on:
+  push:
+    branches: [claude/mac-projects-continuation-9f26ww]
+    paths:
+      - 'promos/**'
+      - '.github/workflows/deploy-promos.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Subir promos/ por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./promos/
+          server-dir: public_html/app.uno-a.com/promos/
+          # Nunca tocar estos archivos en el servidor:
+          exclude: |
+            **/config.php
+            **/*.json
+            **/.htaccess
+            **/README.md
+            **/config.example.php
+            **/.git*
+            **/.DS_Store
