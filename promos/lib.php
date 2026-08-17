@@ -97,7 +97,7 @@ function estadoFinMes() {
 function existeDescuentoEnVentana($v, $ignorarId = null) {
     $res = shopifyGQL('
     query {
-        automaticDiscountNodes(first: 50) {
+        automaticDiscountNodes(first: 100) {
             edges { node {
                 id
                 automaticDiscount {
@@ -140,10 +140,12 @@ function syncDescuentoFinMes() {
             'value' => ['percentage' => FINMES_PCT / 100],
             'items' => ['all' => true],
         ],
+        // Igual que el descuento manual que ya funciona: no se combina con otros.
+        // (No afecta el apilado con las promos, que usan precio tachado, no descuentos.)
         'combinesWith' => [
-            'orderDiscounts'    => true,
-            'productDiscounts'  => true,
-            'shippingDiscounts' => true,
+            'orderDiscounts'    => false,
+            'productDiscounts'  => false,
+            'shippingDiscounts' => false,
         ],
     ];
     // Mínimo de compra (subtotal). 0 = sin mínimo.
@@ -489,7 +491,7 @@ function crearProductoConPromo($sku, $nombre, $promo, $before) {
 // $stats (por referencia) devuelve el resumen de la validación aunque no
 // haya cambios: cuántas promos activas se revisaron contra Shopify, cuántas
 // ya estaban con el precio correcto y cuántas se re-ajustaron.
-function processDue(&$stats = null) {
+function processDue(&$stats = null, $reverify = true) {
     $schedule = loadJson(SCHEDULE_FILE);
     $today    = date('Y-m-d');
     $actions  = [];
@@ -590,7 +592,8 @@ function processDue(&$stats = null) {
 
             // Re-aplicar promo ACTIVA que aún está en fechas pero cuyo
             // precio fue cambiado en Shopify (p.ej. por el actualizador de PVP).
-            elseif ($p['status'] === 'activa' && $today >= $start && $today <= $end) {
+            // Se omite cuando el llamador hará el re-sync forzado aparte (botón).
+            elseif ($reverify && $p['status'] === 'activa' && $today >= $start && $today <= $end) {
                 $stats['activas']++;
                 $v = findVariantBySku($p['sku']);
                 if ($v) {
@@ -635,11 +638,17 @@ function processDue(&$stats = null) {
 
             // Revertir promo activa que ya terminó
             elseif ($p['status'] === 'activa' && $today > $end) {
-                if (!empty($p['variantId']) && !empty($p['productId'])) {
-                    setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null, $p['productId']);
+                // Seguridad: nunca restaurar a $0. Si falta el precio original,
+                // se deja el precio actual y se marca para revisión manual.
+                $orig = (float)($p['originalPrice'] ?? 0);
+                if (!empty($p['variantId']) && !empty($p['productId']) && $orig > 0) {
+                    setPrices($p['variantId'], $orig, $p['originalCompareAt'] ?? null, $p['productId']);
+                    $p['status'] = 'finalizada';
+                    $p['msg']    = 'Precio restaurado ' . date('Y-m-d H:i');
+                } else {
+                    $p['status'] = 'finalizada';
+                    $p['msg']    = 'Terminada (sin precio original guardado; revisa el precio a mano) ' . date('Y-m-d H:i');
                 }
-                $p['status'] = 'finalizada';
-                $p['msg']    = 'Precio restaurado ' . date('Y-m-d H:i');
                 $stats['revertidas']++;
                 // Quitar de la colección de Ofertas (no rompe el cierre si falla).
                 if (!empty($p['productId'])) {

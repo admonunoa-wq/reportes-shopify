@@ -441,8 +441,8 @@ function renderDiagnostico(rows) {
     + '<div class="tscroll"><table class="data-table"><thead><tr>'
     + '<th>SKU</th><th>Producto</th><th>Lista app</th><th>Shopify</th><th>Resultado</th></tr></thead><tbody>';
   rows.forEach(r => {
-    html += '<tr class="' + cls(r.resultado || '') + '"><td>' + (r.sku || '') + '</td><td>' + (r.producto || '')
-      + '</td><td>' + money(r.promoApp) + '</td><td>' + money(r.shopify) + '</td><td>' + (r.resultado || '') + '</td></tr>';
+    html += '<tr class="' + cls(r.resultado || '') + '"><td>' + esc(r.sku || '') + '</td><td>' + esc(r.producto || '')
+      + '</td><td>' + money(r.promoApp) + '</td><td>' + money(r.shopify) + '</td><td>' + esc(r.resultado || '') + '</td></tr>';
   });
   html += '</tbody></table></div>';
   box.innerHTML = html;

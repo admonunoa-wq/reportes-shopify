@@ -102,16 +102,21 @@ try {
         foreach ($schedule as &$p) {
             if ($p['id'] !== $id) continue;
             $found = true;
-            if ($p['status'] === 'activa' && !empty($p['variantId']) && !empty($p['productId'])) {
-                setPrices($p['variantId'], $p['originalPrice'], $p['originalCompareAt'] ?? null, $p['productId']);
+            $orig  = (float)($p['originalPrice'] ?? 0);
+            if ($p['status'] === 'activa' && !empty($p['variantId']) && !empty($p['productId']) && $orig > 0) {
+                // Seguridad: solo restaura si hay un precio original válido (> 0).
+                setPrices($p['variantId'], $orig, $p['originalCompareAt'] ?? null, $p['productId']);
                 try { removeFromOfertas($p['productId']); $p['enOfertas'] = false; } catch (Exception $ce) {}
                 addHistory([
                     'accion'   => 'cancelada+restaurada',
                     'sku'      => $p['sku'],
                     'producto' => $p['product'] ?? '',
-                    'precio'   => $p['originalPrice'],
+                    'precio'   => $orig,
                 ]);
             } else {
+                if (!empty($p['productId'])) {
+                    try { removeFromOfertas($p['productId']); $p['enOfertas'] = false; } catch (Exception $ce) {}
+                }
                 addHistory(['accion' => 'cancelada', 'sku' => $p['sku']]);
             }
             $p['status'] = 'cancelada';
@@ -137,7 +142,9 @@ try {
 
     if ($action === 'run') {
         $stats   = null;
-        $actions = processDue($stats);
+        // reverify=false: la comparación/ajuste de precios la hace el re-sync de
+        // abajo (evita revisar dos veces cada promo contra Shopify).
+        $actions = processDue($stats, false);
         // Red de seguridad: compara la lista de la app contra Shopify y fuerza
         // el precio de promo donde no coincida (devuelve reporte por SKU).
         $diagnostico = resyncPreciosActivos();
