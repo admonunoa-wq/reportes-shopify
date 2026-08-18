@@ -195,6 +195,14 @@ function renderFinMes(fm) {
   if (!box) return;
   if (!fm) { box.className = 'finmes'; box.innerHTML = ''; return; }
 
+  // Nota fija (descuento gestionado por fuera): tiene prioridad y oculta el error.
+  if (fm.nota) {
+    box.className = 'finmes on';
+    box.innerHTML = '<div class="fm-title">🗓️ <b>Descuento 10% última semana</b> — programado ✓</div>'
+      + '<div class="fm-sub">' + esc(fm.nota) + '</div>';
+    return;
+  }
+
   const fmt = (s) => {
     // 'YYYY-MM-DD' → 'DD MMM'
     const m = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];

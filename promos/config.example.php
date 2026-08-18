@@ -41,6 +41,12 @@ define('FINMES_DIAS',   7);       // últimos N días del mes
 define('FINMES_MINIMO', 80000);   // mínimo de compra en $ (0 = sin mínimo)
 // define('FINMES_TITULO', 'Descuento Fin de Mes 10%');  // nombre en Shopify (opcional)
 
+// Nota del banner. Si NO está vacía, la app NO crea/gestiona el descuento (se
+// asume creado por fuera) y el banner muestra esta nota en verde, sin error.
+// Los descuentos del 10% están creados en Shopify hasta dic 2027, por eso hay nota.
+// Cuando se le den permisos a la app y quieras que ella los cree, pon '' aquí.
+define('FINMES_NOTA', 'Descuento del 10% de última semana (mínimo $80.000) programado en Shopify hasta diciembre 2027.');
+
 // Archivos de datos (no tocar)
 define('FINMES_FILE',      __DIR__ . '/finmes.json');
 define('TOKEN_CACHE_FILE', __DIR__ . '/token_cache.json');

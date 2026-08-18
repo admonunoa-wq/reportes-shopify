@@ -54,6 +54,10 @@ if (!defined('FINMES_DIAS'))    define('FINMES_DIAS', 7);        // últimos N d
 if (!defined('FINMES_MINIMO'))  define('FINMES_MINIMO', 80000);  // mínimo de compra (0 = sin mínimo)
 if (!defined('FINMES_TITULO'))  define('FINMES_TITULO', 'Descuento Fin de Mes ' . FINMES_PCT . '%');
 if (!defined('FINMES_FILE'))    define('FINMES_FILE', __DIR__ . '/finmes.json');
+// Nota informativa del banner. Si NO está vacía, la app NO gestiona el descuento
+// (se asume creado por fuera) y el banner muestra esta nota en verde, sin error.
+// Poner '' (cadena vacía) para volver a la gestión automática por la app.
+if (!defined('FINMES_NOTA'))    define('FINMES_NOTA', 'Descuento del 10% de última semana (mínimo $80.000) programado en Shopify hasta diciembre 2027.');
 
 // Ventana [inicio, fin] de los últimos N días del mes que contiene $ref.
 function ventanaFinMes($ref = null) {
@@ -89,6 +93,7 @@ function estadoFinMes() {
         'enVentana' => $v['activa'],
         'shopifyId' => $data['id'] ?? null,
         'error'     => $data['error'] ?? null,
+        'nota'      => FINMES_NOTA,   // si no está vacía, el banner la muestra en verde
     ];
 }
 
@@ -128,6 +133,14 @@ function existeDescuentoEnVentana($v, $ignorarId = null) {
 // Idempotente: el cron lo llama en cada corrida. Requiere scope write_discounts.
 function syncDescuentoFinMes() {
     if (!FINMES_ACTIVO) return ['accion' => ''];
+
+    // Si hay una nota fija, el descuento se gestiona por fuera: no crear nada
+    // y limpiar cualquier error viejo para que no salga el recuadro rojo.
+    if (FINMES_NOTA !== '') {
+        $d = loadJson(FINMES_FILE, []);
+        if (!empty($d['error'])) { unset($d['error']); saveJson(FINMES_FILE, $d); }
+        return ['accion' => ''];
+    }
 
     $v     = ventanaFinMes();
     $data  = loadJson(FINMES_FILE, []);
