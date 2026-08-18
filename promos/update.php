@@ -64,9 +64,10 @@ foreach ($archivos as $f) {
     if ($code !== 200 || $body === false || $body === '') {
         echo "ERROR $f (HTTP $code" . ($err ? " · $err" : '') . ")\n"; $fail++; continue;
     }
-    // Validación: los .php deben empezar con "<?php".
-    if (substr($f, -4) === '.php' && strpos(substr($body, 0, 20), '<' . '?php') === false) {
-        echo "ERROR $f (contenido no parece PHP; no se reemplaza)\n"; $fail++; continue;
+    // Validación mínima: contenido con tamaño razonable (evita respuestas vacías
+    // o páginas de error). No se exige "<?php" porque index.php empieza con HTML.
+    if (strlen($body) < 10) {
+        echo "ERROR $f (contenido muy corto; no se reemplaza)\n"; $fail++; continue;
     }
 
     // Escritura atómica: temporal + rename.
