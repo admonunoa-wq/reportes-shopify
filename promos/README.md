@@ -50,10 +50,27 @@ El Cron Job de cPanel ejecuta `cron.php`, que llama a `processDue()`:
 
 ## Descuento estándar de fin de mes (10% en el carrito)
 
+> ✅ **ESTADO ACTUAL (agosto 2026): los descuentos del 10% ya están creados y
+> programados en Shopify hasta DICIEMBRE 2027.** Cada mes tiene su descuento
+> automático (10%, mínimo $80.000, últimos 7 días), listo y activándose solo en
+> sus fechas. **No hay que hacer nada hasta 2028.**
+>
+> Se crearon manualmente vía API (la app aún no tiene el scope `write_discounts`),
+> así que la función de fin de mes de la app está **desactivada**
+> (`FINMES_ACTIVO=false` en `config.php`) para no duplicar ni mostrar error.
+>
+> ⚠️ **Black Friday:** noviembre 2026 y noviembre 2027 tienen el 10% estándar;
+> si se corre una promo de Black Friday más fuerte, borrar el descuento
+> "10% fin de mes — noviembre" de ese año.
+>
+> 🔜 **En 2028:** volver a crear los descuentos (pedírselo a Claude o crearlos a
+> mano), o darle el scope `write_discounts` + `read_discounts` a la app y poner
+> `FINMES_ACTIVO=true` para que los cree ella sola de ahí en adelante.
+
 Un **10% adicional en todo el carrito** durante los **últimos 7 días de cada mes**.
 Se implementa como **descuento automático nativo de Shopify** (se refleja solo en
-el carrito / checkout, no en el precio de la vitrina), y lo gestiona el cron sin
-intervención manual.
+el carrito / checkout, no en el precio de la vitrina). Cuando la app tiene el
+scope de descuentos, lo gestiona el cron sin intervención manual.
 
 - Cada corrida del cron **crea o actualiza** el descuento automático apuntando a
   la ventana del mes en curso (Shopify lo activa/desactiva solo por fechas).
