@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Actualizador Shopify · Uno A Droguerías</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --bg:#0f172a; --card:#1e293b; --border:#334155;
+  --text:#f1f5f9; --muted:#94a3b8;
+  --purp:#6366f1; --green:#10b981; --red:#ef4444; --amber:#f59e0b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+header{background:linear-gradient(135deg,#1e1b4b,#0f172a);padding:18px 24px;border-bottom:1px solid var(--border)}
+header h1{font-size:1.3rem;color:#fff}
+header p{color:var(--muted);font-size:.82rem;margin-top:3px}
+.hdr-inner{max-width:920px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.container{max-width:920px;margin:0 auto;padding:24px 16px}
+
+/* Auth */
+.auth-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 70px)}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:36px 32px;width:100%;max-width:360px;text-align:center}
+.auth-box h2{margin-bottom:6px;font-size:1.2rem}
+.auth-box p{color:var(--muted);font-size:.83rem;margin-bottom:22px}
+
+/* Controls */
+input[type=password],input[type=text],select{
+  background:#0f172a;border:1px solid var(--border);color:var(--text);
+  padding:9px 13px;border-radius:8px;font-size:.88rem;font-family:inherit;
+  width:100%;outline:none;transition:border-color .2s
+}
+input:focus,select:focus{border-color:var(--purp)}
+select{width:auto}
+.btn{padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.88rem;font-family:inherit;font-weight:600;transition:.2s}
+.btn-purp{background:var(--purp);color:#fff}
+.btn-purp:hover:not(:disabled){background:#4f46e5}
+.btn-purp:disabled{opacity:.45;cursor:not-allowed}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--purp);color:var(--purp)}
+.btn-sm{padding:5px 13px;font-size:.78rem}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:18px}
+.card-title{font-size:.93rem;font-weight:700;color:var(--purp);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+
+/* Settings */
+.row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.toggle input{display:none}
+.track{width:36px;height:20px;background:var(--border);border-radius:10px;position:relative;transition:.2s;flex-shrink:0}
+.track::after{content:'';position:absolute;width:16px;height:16px;background:white;border-radius:50%;top:2px;left:2px;transition:.2s}
+.toggle input:checked+.track{background:var(--purp)}
+.toggle input:checked+.track::after{left:18px}
+.toggle span{font-size:.84rem}
+
+/* Drop zone */
+.drop{border:2px dashed var(--border);border-radius:10px;padding:36px 20px;text-align:center;cursor:pointer;transition:.2s}
+.drop:hover,.drop.over{border-color:var(--purp);background:rgba(99,102,241,.06)}
+.drop-icon{width:44px;height:44px;color:var(--muted);margin:0 auto 12px}
+.drop h3{font-size:.95rem;margin-bottom:5px}
+.drop p{font-size:.8rem;color:var(--muted)}
+
+/* Column map */
+.col-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.col-item label{font-size:.76rem;color:var(--muted);display:block;margin-bottom:4px}
+
+/* Table */
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{background:#0f172a;color:var(--muted);padding:7px 10px;text-align:left;font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:6px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+tr:hover td{background:#263148}
+
+/* Badges */
+.b{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:.73rem;font-weight:600}
+.b-ok{background:#064e3b;color:#6ee7b7}
+.b-err{background:#450a0a;color:#fca5a5}
+.b-warn{background:#451a03;color:#fed7aa}
+
+/* Progress */
+.prog-bar{background:var(--border);border-radius:4px;height:7px;overflow:hidden;margin:10px 0}
+.prog-fill{height:100%;background:var(--purp);transition:width .3s;border-radius:4px}
+.prog-txt{font-size:.8rem;color:var(--muted)}
+.summary{display:flex;gap:20px;padding:10px 0;flex-wrap:wrap}
+.sum-ok{color:var(--green);font-size:.84rem}
+.sum-err{color:var(--red);font-size:.84rem}
+.sum-warn{color:var(--amber);font-size:.84rem}
+.sum-tot{color:var(--muted);font-size:.84rem}
+
+/* Alert */
+.alert{padding:10px 14px;border-radius:8px;font-size:.83rem;margin-bottom:14px}
+.a-red{background:#450a0a;border:1px solid #7f1d1d;color:#fca5a5}
+.a-green{background:#064e3b;border:1px solid #065f46;color:#6ee7b7}
+
+.hidden{display:none!important}
+code{font-family:monospace;font-size:.8rem;background:#0f172a;padding:1px 5px;border-radius:3px}
+footer{text-align:center;padding:18px;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border);margin-top:8px}
+
+@media(max-width:620px){
+  .col-grid{grid-template-columns:1fr}
+  .row{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-inner">
+    <div>
+      <h1>Actualizador Shopify</h1>
+      <p>Uno A Droguerías · Actualiza precios e inventario desde CSV / Excel</p>
+    </div>
+    <div id="hdrUser" class="hidden" style="text-align:right">
+      <div style="font-size:.75rem;color:var(--muted)" id="hdrDomain"></div>
+      <button class="btn btn-ghost btn-sm" onclick="logout()" style="margin-top:4px">Salir</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── AUTH ── -->
+<div class="auth-wrap" id="authScreen">
+  <div class="auth-box">
+    <h2>Acceso seguro</h2>
+    <p>Ingresa la contraseña para acceder al actualizador de Shopify</p>
+    <div id="authErr" class="alert a-red hidden"></div>
+    <input type="password" id="pwInput" placeholder="Contraseña"
+           onkeydown="if(event.key==='Enter')login()" style="margin-bottom:10px">
+    <button class="btn btn-purp" style="width:100%" onclick="login()" id="loginBtn">Entrar</button>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div class="container hidden" id="app">
+
+  <!-- Settings -->
+  <div class="card">
+    <div class="card-title">⚙️ Configuración</div>
+    <div class="row">
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <span style="font-size:.84rem;color:var(--muted)">📍 Bodega:</span>
+        <select id="locSel" style="min-width:190px"></select>
+      </div>
+      <div class="row" style="margin-left:auto;gap:20px">
+        <label class="toggle">
+          <input type="checkbox" id="doPrice" checked>
+          <div class="track"></div>
+          <span>Actualizar Precios</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="doInv" checked>
+          <div class="track"></div>
+          <span>Actualizar Inventario</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload -->
+  <div class="card">
+    <div class="card-title">📂 Cargar Archivo</div>
+    <div class="drop" id="dropZone"
+         onclick="document.getElementById('fileIn').click()"
+         ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+      <svg class="drop-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+      </svg>
+      <h3>Arrastra tu archivo aquí</h3>
+      <p>CSV · XLSX · XLS &nbsp;·&nbsp; o haz clic para seleccionar</p>
+      <p style="margin-top:10px">
+        <a href="#" onclick="dlTemplate(event)" style="color:var(--purp);font-size:.78rem">
+          📥 Descargar plantilla CSV de ejemplo
+        </a>
+      </p>
+    </div>
+    <input type="file" id="fileIn" accept=".csv,.xlsx,.xls" class="hidden"
+           onchange="loadFile(this.files[0])">
+    <div id="fileName" class="hidden"
+         style="margin-top:10px;font-size:.83rem;color:var(--green)"></div>
+  </div>
+
+  <!-- Column mapping -->
+  <div class="card hidden" id="mapCard">
+    <div class="card-title">🗂️ Asignar Columnas</div>
+    <div class="col-grid">
+      <div class="col-item">
+        <label>Columna SKU *</label>
+        <select id="skuCol"></select>
+      </div>
+      <div class="col-item">
+        <label>Columna Precio (opcional)</label>
+        <select id="priceCol"></select>
+      </div>
+      <div class="col-item">
+        <label>Columna Inventario (opcional)</label>
+        <select id="invCol"></select>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="applyMap()">
+      Aplicar columnas
+    </button>
+  </div>
+
+  <!-- Preview -->
+  <div class="card hidden" id="preCard">
+    <div class="card-title">
+      <span>👁️ Vista Previa <span style="font-weight:400;font-size:.8rem" id="preCount"></span></span>
+    </div>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>SKU</th><th>Precio</th><th>Inventario</th></tr></thead>
+        <tbody id="preTbody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-purp" id="updBtn" onclick="startUpdate()">
+        ⬆️ Actualizar en Shopify
+      </button>
+      <span id="updHint" style="font-size:.8rem;color:var(--muted)"></span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="card hidden" id="progCard">
+    <div class="card-title">⏳ Actualizando en Shopify...</div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-txt" id="progTxt">0 / 0</div>
+    <div class="summary">
+      <div class="sum-ok"  id="sOk">✅ 0 OK</div>
+      <div class="sum-err" id="sErr">❌ 0 errores</div>
+      <div class="sum-warn" id="sWarn">⚠️ 0 no encontrados</div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card hidden" id="resCard">
+    <div class="card-title">
+      <span>📊 Resultados</span>
+      <button class="btn btn-ghost btn-sm" onclick="resetApp()">Nueva carga</button>
+    </div>
+    <div class="summary" id="resSummary"></div>
+    <div class="tscroll" style="margin-top:12px">
+      <table>
+        <thead>
+          <tr><th>SKU</th><th>Producto</th><th>Precio</th><th>Inventario</th><th>Estado</th></tr>
+        </thead>
+        <tbody id="resTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>Actualizador Shopify · Uno A Droguerías · app.uno-a.com</footer>
+
+<script>
+// ── State ────────────────────────────────────────────────────────
+let pw = '', rows = [], hdrs = [], busy = false;
+
+// ── Auth ─────────────────────────────────────────────────────────
+function login() {
+  const val = document.getElementById('pwInput').value.trim();
+  if (!val) return;
+  pw = val;
+  setBtn('loginBtn', true, 'Verificando...');
+  apiCall({ password: pw, action: 'locations' })
+    .then(d => {
+      if (d.error) { showAuthErr(d.error); pw = ''; return; }
+      show('authScreen', false); show('app', true); show('hdrUser', true);
+      fillLocations(d.locations);
+    })
+    .catch(() => { showAuthErr('Error de conexión con el servidor'); pw = ''; })
+    .finally(() => setBtn('loginBtn', false, 'Entrar'));
+}
+
+function logout() {
+  pw = ''; resetApp();
+  show('authScreen', true); show('app', false); show('hdrUser', false);
+  document.getElementById('pwInput').value = '';
+  document.getElementById('authErr').classList.add('hidden');
+}
+
+function showAuthErr(msg) {
+  const el = document.getElementById('authErr');
+  el.textContent = msg; el.classList.remove('hidden');
+}
+
+// ── Locations ────────────────────────────────────────────────────
+function fillLocations(locs) {
+  const sel = document.getElementById('locSel');
+  sel.innerHTML = '';
+  if (!locs || locs.length === 0) {
+    sel.innerHTML = '<option value="">Sin ubicaciones</option>'; return;
+  }
+  locs.forEach(l => {
+    const o = document.createElement('option');
+    o.value = l.id; o.textContent = l.name; sel.appendChild(o);
+  });
+}
+
+// ── File handling ─────────────────────────────────────────────────
+function onDragOver(e)  { e.preventDefault(); el('dropZone').classList.add('over'); }
+function onDragLeave()  { el('dropZone').classList.remove('over'); }
+function onDrop(e)      { e.preventDefault(); el('dropZone').classList.remove('over'); loadFile(e.dataTransfer.files[0]); }
+
+function loadFile(file) {
+  if (!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (!['csv','xlsx','xls'].includes(ext)) { alert('Usa CSV, XLSX o XLS'); return; }
+
+  el('fileName').textContent = '📄 ' + file.name;
+  show('fileName', true);
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    let wb;
+    if (ext === 'csv') wb = XLSX.read(e.target.result, { type: 'string' });
+    else               wb = XLSX.read(e.target.result, { type: 'array' });
+
+    const ws       = wb.Sheets[wb.SheetNames[0]];
+    const allRows  = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+    if (allRows.length < 2) { alert('El archivo está vacío'); return; }
+
+    hdrs = allRows[0].map(h => String(h).trim());
+    rows = allRows.slice(1).filter(r => r.some(c => String(c).trim() !== ''));
+    buildColSelectors();
+    show('mapCard', true);
+    applyMap();
+  };
+  if (ext === 'csv') reader.readAsText(file, 'UTF-8');
+  else               reader.readAsArrayBuffer(file);
+}
+
+// ── Column mapping ────────────────────────────────────────────────
+const SKU_H   = ['sku','ref','codigo','code','referencia','barcode','id'];
+const PRICE_H = ['precio','price','costo','valor','pvp','venta'];
+const INV_H   = ['inventario','inventory','stock','cantidad','qty','existencia','unidades'];
+
+function detect(hints) {
+  return hdrs.findIndex(h => hints.some(hint => h.toLowerCase().includes(hint)));
+}
+
+function buildColSelectors() {
+  ['skuCol','priceCol','invCol'].forEach(id => {
+    const s = el(id);
+    s.innerHTML = '<option value="-1">— No usar —</option>';
+    hdrs.forEach((h, i) => {
+      const o = document.createElement('option');
+      o.value = i; o.textContent = 'Col ' + (i+1) + ': ' + (h || '(vacío)');
+      s.appendChild(o);
+    });
+  });
+  const si = detect(SKU_H), pi = detect(PRICE_H), ii = detect(INV_H);
+  el('skuCol').value   = si >= 0 ? si : 0;
+  el('priceCol').value = pi >= 0 ? pi : -1;
+  el('invCol').value   = ii >= 0 ? ii : -1;
+}
+
+function applyMap() {
+  const si = +el('skuCol').value, pi = +el('priceCol').value, ii = +el('invCol').value;
+  if (si < 0) { alert('Selecciona la columna de SKU'); return; }
+
+  const pre    = rows.slice(0, 10);
+  const tbody  = el('preTbody');
+  tbody.innerHTML = '';
+  pre.forEach(r => {
+    const sku  = r[si] ?? '';
+    const pr   = pi >= 0 ? r[pi] : '—';
+    const inv  = ii >= 0 ? r[ii] : '—';
+    tbody.innerHTML += '<tr><td>' + sku + '</td><td>' + pr + '</td><td>' + inv + '</td></tr>';
+  });
+
+  const total = rows.filter(r => String(r[si] ?? '').trim()).length;
+  el('preCount').textContent = '· ' + total + ' filas con SKU' + (rows.length > 10 ? ' (mostrando primeras 10)' : '');
+  el('updHint').textContent  = total + ' productos a actualizar';
+  show('preCard', true);
+}
+
+// ── Update ────────────────────────────────────────────────────────
+async function startUpdate() {
+  if (busy) return;
+  const si  = +el('skuCol').value;
+  const pi  = +el('priceCol').value;
+  const ii  = +el('invCol').value;
+  const doP = el('doPrice').checked;
+  const doI = el('doInv').checked;
+  const loc = el('locSel').value;
+
+  if (!loc)       { alert('Selecciona una bodega'); return; }
+  if (!doP&&!doI) { alert('Activa al menos Precios o Inventario'); return; }
+  if (si < 0)     { alert('Asigna la columna de SKU'); return; }
+
+  const queue = rows
+    .filter(r => String(r[si]??'').trim())
+    .map(r => ({
+      sku:       String(r[si]).trim(),
+      price:     (pi >= 0 && doP) ? cleanNum(r[pi]) : null,
+      inventory: (ii >= 0 && doI) ? parseInv(r[ii]) : null,
+    }))
+    .filter(r => r.sku);
+
+  if (queue.length === 0) { alert('No hay filas con SKU'); return; }
+
+  busy = true;
+  el('updBtn').disabled = true;
+  show('progCard', true);
+  show('resCard', false);
+
+  let ok = 0, err = 0, warn = 0;
+  const results = [];
+
+  for (let i = 0; i < queue.length; i++) {
+    const item = queue[i];
+    setProgress(i + 1, queue.length, ok, err, warn);
+
+    try {
+      const d = await apiCall({
+        password: pw, action: 'update',
+        sku: item.sku, price: item.price,
+        inventory: item.inventory, locationId: loc
+      });
+
+      if (d.notFound) {
+        warn++;
+        results.push({ ...item, product: '—', status: 'warn', msg: 'SKU no encontrado en Shopify' });
+      } else if (d.success) {
+        ok++;
+        results.push({ ...item, product: d.product, status: 'ok', msg: d.changes });
+      } else {
+        err++;
+        results.push({ ...item, product: d.product || '—', status: 'err', msg: d.error || 'Error' });
+      }
+    } catch (e) {
+      err++;
+      results.push({ ...item, product: '—', status: 'err', msg: 'Error de red' });
+    }
+
+    await sleep(180); // respeta los rate limits de Shopify
+  }
+
+  setProgress(queue.length, queue.length, ok, err, warn);
+  showResults(results, ok, err, warn);
+  busy = false;
+  el('updBtn').disabled = false;
+}
+
+function setProgress(cur, total, ok, err, warn) {
+  const pct = Math.round(cur / total * 100);
+  el('progFill').style.width = pct + '%';
+  el('progTxt').textContent  = cur + ' / ' + total + ' (' + pct + '%)';
+  el('sOk').textContent   = '✅ ' + ok   + ' OK';
+  el('sErr').textContent  = '❌ ' + err  + ' errores';
+  el('sWarn').textContent = '⚠️ ' + warn + ' no encontrados';
+}
+
+function showResults(results, ok, err, warn) {
+  show('progCard', false);
+  show('resCard', true);
+
+  el('resSummary').innerHTML =
+    '<div class="sum-ok">✅ '   + ok   + ' actualizados</div>' +
+    '<div class="sum-err">❌ '  + err  + ' errores</div>' +
+    '<div class="sum-warn">⚠️ ' + warn + ' no encontrados</div>' +
+    '<div class="sum-tot">Total: '  + results.length + '</div>';
+
+  const tbody = el('resTbody');
+  tbody.innerHTML = '';
+  results.forEach(r => {
+    const badge = r.status === 'ok'
+      ? '<span class="b b-ok">✓ OK — ' + (r.msg || '') + '</span>'
+      : r.status === 'warn'
+      ? '<span class="b b-warn">⚠ No encontrado</span>'
+      : '<span class="b b-err">✗ ' + r.msg + '</span>';
+
+    tbody.innerHTML +=
+      '<tr>' +
+      '<td><code>' + r.sku + '</code></td>' +
+      '<td>' + (r.product || '—') + '</td>' +
+      '<td>' + (r.price !== null ? '$' + Number(r.price).toLocaleString('es-CO') : '—') + '</td>' +
+      '<td>' + (r.inventory !== null ? r.inventory : '—') + '</td>' +
+      '<td>' + badge + '</td>' +
+      '</tr>';
+  });
+}
+
+function resetApp() {
+  rows = []; hdrs = [];
+  ['mapCard','preCard','progCard','resCard','fileName'].forEach(id => show(id, false));
+  el('fileIn').value = '';
+}
+
+// ── Template download ─────────────────────────────────────────────
+function dlTemplate(e) {
+  e.preventDefault(); e.stopPropagation();
+  const csv = 'SKU,Precio,Inventario\nFINHET-001,125000,50\nISOTRET-001,145000,30\nFINAST-001,98000,40\n';
+  const a   = document.createElement('a');
+  a.href    = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  a.download = 'plantilla_actualizacion.csv';
+  a.click();
+}
+
+// ── Helpers ───────────────────────────────────────────────────────
+function apiCall(body) {
+  return fetch('update.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }).then(r => r.json());
+}
+
+function cleanNum(val) {
+  if (val === null || val === undefined || String(val).trim() === '') return null;
+  const n = parseFloat(String(val).replace(/[^0-9.,]/g, '').replace(',', '.'));
+  return isNaN(n) ? null : n;
+}
+
+function parseInv(val) {
+  const n = parseInt(String(val ?? '').replace(/[^0-9-]/g, ''));
+  return isNaN(n) ? null : n;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function el(id)    { return document.getElementById(id); }
+function show(id, v) {
+  const e = el(id);
+  if (e) v ? e.classList.remove('hidden') : e.classList.add('hidden');
+}
+function setBtn(id, disabled, txt) {
+  const b = el(id); if (!b) return;
+  b.disabled = disabled; if (txt) b.textContent = txt;
+}
+</script>
+</body>
+</html>
