@@ -70,6 +70,11 @@
     .diag tr.d-fix td { color: #fcd34d; }
     .diag tr.d-ok  td { opacity: .7; }
     .diag tr.d-err td { color: #fca5a5; }
+    .manual-box { margin: 16px 0 0; padding: 14px; border-radius: 10px; border: 1px dashed rgba(148,163,184,.35); background: rgba(148,163,184,.05); }
+    .manual-title { font-size: .9rem; font-weight: 700; margin-bottom: 4px; }
+    .manual-hint { font-size: .78rem; opacity: .7; margin: 0 0 10px; }
+    .manual-grid { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+    .manual-grid .field { flex: 1 1 140px; }
     @media(max-width:600px){ .dates-row { flex-direction: column; } }
   </style>
 </head>
@@ -120,6 +125,21 @@
         </button>
       </div>
       <div class="msg hidden" id="schedMsg"></div>
+
+      <!-- Alta manual (una sola promo, sin archivo) -->
+      <div class="manual-box">
+        <div class="manual-title">➕ O agrega una promoción manual (sin archivo)</div>
+        <p class="manual-hint">Solo necesitas el SKU. El nombre del producto se toma solo de Shopify.</p>
+        <div class="manual-grid">
+          <div class="field"><label>SKU</label><input type="text" id="mSku" placeholder="Ej. 476"></div>
+          <div class="field"><label>Precio comparación (tachado)</label><input type="text" id="mBefore" inputmode="numeric" placeholder="Ej. 120.000"></div>
+          <div class="field"><label>Precio de venta (promo)</label><input type="text" id="mAfter" inputmode="numeric" placeholder="Ej. 96.000"></div>
+          <div class="field"><label>Inicio</label><input type="date" id="mStart"></div>
+          <div class="field"><label>Fin (incluido)</label><input type="date" id="mEnd"></div>
+          <button class="flecha" id="mBtn" onclick="scheduleManual()" style="align-self:flex-end;cursor:pointer;border:none;font-family:inherit;font-size:.88rem;padding:8px 20px;border-radius:8px">➕ Agregar</button>
+        </div>
+        <div class="msg hidden" id="mMsg"></div>
+      </div>
 
       <!-- Vista previa -->
       <div class="preview-section hidden" id="preSection">
@@ -387,6 +407,42 @@ function schedule() {
     })
     .catch(err => showMsg('err', 'Error de conexión: ' + err.message))
     .finally(() => setBtn('schedBtn', false, '📅 Programar →'));
+}
+
+// ── Alta manual (una sola promo) ─────────────────────────────────
+function scheduleManual() {
+  const sku    = el('mSku').value.trim();
+  const before = cleanNum(el('mBefore').value);
+  const after  = cleanNum(el('mAfter').value);
+  const start  = el('mStart').value;
+  const end    = el('mEnd').value;
+
+  if (!sku)           { showManual('err', '⚠ Escribe el SKU.'); return; }
+  if (!(after > 0))   { showManual('err', '⚠ El precio de venta debe ser mayor que 0.'); return; }
+  if (!start || !end) { showManual('err', '⚠ Pon las fechas de inicio y fin.'); return; }
+  if (end < start)    { showManual('err', '⚠ La fecha Fin no puede ser anterior al Inicio.'); return; }
+
+  setBtn('mBtn', true, 'Agregando…');
+  api({ action: 'schedule', rows: [{ sku, product: '', beforePrice: before, promoPrice: after, start, end }] })
+    .then(d => {
+      if (d.error)   { showManual('err', '⚠ ' + d.error); return; }
+      if (!d.added)  { showManual('err', '⚠ No se agregó (revisa SKU, precio y fechas).'); return; }
+      let txt = '✅ Promo agregada';
+      if (d.applied) txt += ' y aplicada de inmediato';
+      showManual('ok', txt);
+      ['mSku', 'mBefore', 'mAfter', 'mStart', 'mEnd'].forEach(id => el(id).value = '');
+      if (d.schedule) renderSchedule(d.schedule);
+      refresh();
+    })
+    .catch(err => showManual('err', 'Error de conexión: ' + err.message))
+    .finally(() => setBtn('mBtn', false, '➕ Agregar'));
+}
+
+function showManual(type, text) {
+  const e = el('mMsg');
+  e.className = 'msg ' + type;
+  e.textContent = text;
+  show('mMsg', true);
 }
 
 // ── Acciones ─────────────────────────────────────────────────────
